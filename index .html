@@ -5,26 +5,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SVG Slayt Düzenleyici</title>
 <style>
+  body { font-family: Arial, sans-serif; padding: 20px; }
   #svg-container { border: 1px solid #ccc; width: 600px; height: 400px; margin-bottom: 20px; }
   label { display: block; margin-top: 10px; }
-  input { width: 300px; padding: 5px; }
-  button { margin-top: 10px; padding: 5px 10px; }
+  input { width: 300px; padding: 5px; margin-top: 5px; }
+  button { margin-top: 10px; padding: 5px 10px; cursor: pointer; }
 </style>
 </head>
 <body>
 
 <h1>SVG Slayt Düzenleyici</h1>
 
-<!-- Inline SVG -->
+<!-- Inline SVG, dosya gerek yok -->
 <div id="svg-container">
-  <svg id="mysvg" width="600" height="400" xmlns="https://github.com/tafbilgiislem/ypm/blob/main/slayt.svg">
+  <svg id="mysvg" width="600" height="400" xmlns="http://www.w3.org/2000/svg">
     <rect width="600" height="400" fill="#f0f0f0"/>
     <text id="slide-title" x="50" y="100" font-size="36" fill="#333">Merhaba Dünya</text>
     <text id="slide-subtitle" x="50" y="150" font-size="24" fill="#666">İlk Slayt</text>
   </svg>
 </div>
 
-<!-- Form -->
+<!-- Düzenleme Formu -->
 <form id="edit-form">
   <label>
     Başlık:
@@ -39,21 +40,16 @@
 
 <script>
 function updateSVGText() {
-    const svgDoc = document.getElementById('mysvg');
+    const svg = document.getElementById('mysvg');
 
-    // Başlık güncelle
-    const titleText = svgDoc.getElementById('slide-title');
-    if(titleText) {
-        const newTitle = document.getElementById('slide-title-input').value;
-        if(newTitle) titleText.textContent = newTitle;
-    }
+    const titleInput = document.getElementById('slide-title-input').value;
+    const subtitleInput = document.getElementById('slide-subtitle-input').value;
 
-    // Alt başlık güncelle
-    const subtitleText = svgDoc.getElementById('slide-subtitle');
-    if(subtitleText) {
-        const newSubtitle = document.getElementById('slide-subtitle-input').value;
-        if(newSubtitle) subtitleText.textContent = newSubtitle;
-    }
+    const titleElem = svg.getElementById('slide-title');
+    const subtitleElem = svg.getElementById('slide-subtitle');
+
+    if(titleElem && titleInput) titleElem.textContent = titleInput;
+    if(subtitleElem && subtitleInput) subtitleElem.textContent = subtitleInput;
 }
 </script>
 
