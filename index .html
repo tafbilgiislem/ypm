@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SVG Slayt Düzenleyici</title>
+<style>
+  #svg-container { border: 1px solid #ccc; width: 600px; height: 400px; }
+  label { display: block; margin-top: 10px; }
+</style>
+</head>
+<body>
+
+<h1>SVG Slayt Düzenleyici</h1>
+
+<div id="svg-container">
+  <object id="mysvg" type="image/svg+xml" data="slayt.svg"></object>
+</div>
+
+<form id="edit-form">
+  <label>
+    Başlık:
+    <input type="text" id="slide-title-input" placeholder="Başlığı yazın">
+  </label>
+  <label>
+    Alt Başlık:
+    <input type="text" id="slide-subtitle-input" placeholder="Alt başlığı yazın">
+  </label>
+  <button type="button" onclick="updateSVGText()">Güncelle</button>
+</form>
+
+<script>
+function updateSVGText() {
+    const svgObj = document.getElementById('mysvg');
+    const svgDoc = svgObj.contentDocument;
+
+    // Başlık
+    const titleText = svgDoc.getElementById('slide-title');
+    if(titleText) {
+        titleText.textContent = document.getElementById('slide-title-input').value;
+    }
+
+    // Alt başlık
+    const subtitleText = svgDoc.getElementById('slide-subtitle');
+    if(subtitleText) {
+        subtitleText.textContent = document.getElementById('slide-subtitle-input').value;
+    }
+}
+</script>
+
+</body>
+</html>
