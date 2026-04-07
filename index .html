@@ -1,57 +1,27 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SVG Slayt Düzenleyici</title>
+<title>Olympic Countdown</title>
+
 <style>
-  body { font-family: Arial, sans-serif; padding: 20px; }
-  #svg-container { border: 1px solid #ccc; width: 600px; height: 400px; margin-bottom: 20px; }
-  label { display: block; margin-top: 10px; }
-  input { width: 300px; padding: 5px; margin-top: 5px; }
-  button { margin-top: 10px; padding: 5px 10px; cursor: pointer; }
+body{
+margin:0;
+background:white;
+overflow:hidden;
+}
 </style>
+
 </head>
+
 <body>
 
-<h1>SVG Slayt Düzenleyici</h1>
-
-<!-- Inline SVG, dosya gerek yok -->
-<div id="svg-container">
-  <svg id="mysvg" width="600" height="400" xmlns="http://www.w3.org/2000/svg">
-    <rect width="600" height="400" fill="#f0f0f0"/>
-    <text id="slide-title" x="50" y="100" font-size="36" fill="#333">Merhaba Dünya</text>
-    <text id="slide-subtitle" x="50" y="150" font-size="24" fill="#666">İlk Slayt</text>
-  </svg>
-</div>
-
-<!-- Düzenleme Formu -->
-<form id="edit-form">
-  <label>
-    Başlık:
-    <input type="text" id="slide-title-input" placeholder="Başlığı yazın">
-  </label>
-  <label>
-    Alt Başlık:
-    <input type="text" id="slide-subtitle-input" placeholder="Alt başlığı yazın">
-  </label>
-  <button type="button" onclick="updateSVGText()">Güncelle</button>
-</form>
-
-<script>
-function updateSVGText() {
-    const svg = document.getElementById('mysvg');
-
-    const titleInput = document.getElementById('slide-title-input').value;
-    const subtitleInput = document.getElementById('slide-subtitle-input').value;
-
-    const titleElem = svg.getElementById('slide-title');
-    const subtitleElem = svg.getElementById('slide-subtitle');
-
-    if(titleElem && titleInput) titleElem.textContent = titleInput;
-    if(subtitleElem && subtitleInput) subtitleElem.textContent = subtitleInput;
-}
-</script>
+<object
+data="slayt.svg"
+type="image/svg+xml"
+width="100%"
+height="100%">
+</object>
 
 </body>
 </html>
