@@ -5,18 +5,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SVG Slayt Düzenleyici</title>
 <style>
-  #svg-container { border: 1px solid #ccc; width: 600px; height: 400px; }
+  #svg-container { border: 1px solid #ccc; width: 600px; height: 400px; margin-bottom: 20px; }
   label { display: block; margin-top: 10px; }
+  input { width: 300px; padding: 5px; }
+  button { margin-top: 10px; padding: 5px 10px; }
 </style>
 </head>
 <body>
 
 <h1>SVG Slayt Düzenleyici</h1>
 
+<!-- Inline SVG -->
 <div id="svg-container">
-  <object id="mysvg" type="image/svg+xml" data="slayt.svg"></object>
+  <svg id="mysvg" width="600" height="400" xmlns="http://www.w3.org/2000/svg">
+    <rect width="600" height="400" fill="#f0f0f0"/>
+    <text id="slide-title" x="50" y="100" font-size="36" fill="#333">Merhaba Dünya</text>
+    <text id="slide-subtitle" x="50" y="150" font-size="24" fill="#666">İlk Slayt</text>
+  </svg>
 </div>
 
+<!-- Form -->
 <form id="edit-form">
   <label>
     Başlık:
@@ -31,19 +39,20 @@
 
 <script>
 function updateSVGText() {
-    const svgObj = document.getElementById('mysvg');
-    const svgDoc = svgObj.contentDocument;
+    const svgDoc = document.getElementById('mysvg');
 
-    // Başlık
+    // Başlık güncelle
     const titleText = svgDoc.getElementById('slide-title');
     if(titleText) {
-        titleText.textContent = document.getElementById('slide-title-input').value;
+        const newTitle = document.getElementById('slide-title-input').value;
+        if(newTitle) titleText.textContent = newTitle;
     }
 
-    // Alt başlık
+    // Alt başlık güncelle
     const subtitleText = svgDoc.getElementById('slide-subtitle');
     if(subtitleText) {
-        subtitleText.textContent = document.getElementById('slide-subtitle-input').value;
+        const newSubtitle = document.getElementById('slide-subtitle-input').value;
+        if(newSubtitle) subtitleText.textContent = newSubtitle;
     }
 }
 </script>
