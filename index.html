@@ -4,7 +4,6 @@
 <head>
 
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Slayt</title>
@@ -13,7 +12,6 @@
 
 html,body{
 margin:0;
-padding:0;
 width:100%;
 height:100%;
 background:black;
@@ -21,13 +19,15 @@ overflow:hidden;
 }
 
 .container{
+position:relative;
 width:100vw;
 height:100vh;
 }
 
-object{
-width:100vw;
-height:100vh;
+.frame{
+position:absolute;
+width:100%;
+height:100%;
 border:none;
 }
 
@@ -35,17 +35,28 @@ border:none;
 
 <script>
 
+let aktif = 1;
+
 function reloadSVG(){
 
-let svg = document.getElementById("slayt");
+let yeni = aktif === 1 ? 2 : 1;
+let aktifFrame = document.getElementById("frame"+aktif);
+let yeniFrame = document.getElementById("frame"+yeni);
 
-let newData = "slayt.svg?t="+Date.now();
+yeniFrame.data = "slayt.svg?t="+Date.now();
 
-svg.data = newData;
+yeniFrame.onload = function(){
+
+aktifFrame.style.opacity="0";
+yeniFrame.style.opacity="1";
+
+aktif = yeni;
 
 }
 
-setInterval(reloadSVG,2000);
+}
+
+setInterval(reloadSVG,3000);
 
 </script>
 
@@ -55,9 +66,18 @@ setInterval(reloadSVG,2000);
 
 <div class="container">
 
-<object id="slayt"
+<object id="frame1"
+class="frame"
 type="image/svg+xml"
-data="slayt.svg">
+data="slayt.svg"
+style="opacity:1">
+</object>
+
+<object id="frame2"
+class="frame"
+type="image/svg+xml"
+data=""
+style="opacity:0">
 </object>
 
 </div>
