@@ -2,74 +2,38 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>SVG Live Inline</title>
+<title>SVG Live Clock</title>
 <style>
 html, body {
   margin:0;
   padding:0;
   width:100%;
   height:100%;
-  overflow:hidden;
   background:black;
+  overflow:hidden;
 }
-#svg-container {
-  width:100%;
-  height:100%;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
-svg {
-  width:100%;
-  height:100%;
-  display:block;
+#svgFrame {
+  width:100vw;
+  height:100vh;
+  border:none;
 }
 </style>
 </head>
 <body>
 
-<div id="svg-container">SVG Yükleniyor...</div>
+<iframe id="svgFrame" src="slayt.svg" frameborder="0"></iframe>
 
 <script>
-const svgFile = 'slayt.svg'; // Aynı depodaki SVG
+const svgFile = 'dosya.svg';
 
-async function loadSVG() {
-  try {
-    // cacheBuster ekleyerek değişiklikleri al
-    const response = await fetch(svgFile + '?v=' + Date.now());
-    if (!response.ok) throw new Error('SVG yüklenemedi!');
-    const svgText = await response.text();
-
-    // SVG'yi DOM'a ekle
-    const container = document.getElementById('svg-container');
-    
-    // Sadece container boşsa ekle (flicker olmaması için)
-    if (!container.innerHTML) {
-      container.innerHTML = svgText;
-    } else {
-      // Inline güncelleme: yeni SVG ile eskiyi değiştir
-      const parser = new DOMParser();
-      const newDoc = parser.parseFromString(svgText, "image/svg+xml");
-      const newSVG = newDoc.querySelector('svg');
-
-      const oldSVG = container.querySelector('svg');
-      if (oldSVG) {
-        oldSVG.replaceWith(newSVG);
-      } else {
-        container.appendChild(newSVG);
-      }
-    }
-
-  } catch(e) {
-    document.getElementById('svg-container').textContent = 'SVG yüklenirken hata: ' + e;
-  }
+function reloadSVG() {
+  const frame = document.getElementById('svgFrame');
+  // cacheBuster ekleyerek tarayıcı önbelleğe bakmaz
+  frame.src = svgFile + '?v=' + Date.now();
 }
 
-// İlk yükleme
-loadSVG();
-
-// Her 2 saniyede bir güncelle
-setInterval(loadSVG, 2000);
+// 2 saniyede bir reload
+setInterval(reloadSVG, 2000);
 </script>
 
 </body>
