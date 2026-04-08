@@ -1,5 +1,5 @@
 <svg width="600" height="400" xmlns="http://www.w3.org/2000/svg">
   <rect width="600" height="400" fill="#f0f0f0"></rect>
-  <text id="title" x="50" y="100" font-size="36" fill="#333">555</text>
-  <text id="subtitle" x="50" y="150" font-size="24" fill="#666">222</text>
+  <text id="title" x="50" y="100" font-size="36" fill="#333">ppp</text>
+  <text id="subtitle" x="50" y="150" font-size="24" fill="#666">ppp</text>
 </svg>
