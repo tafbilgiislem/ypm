@@ -2,24 +2,30 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <title>SVG Canlı Önizleme</title>
+  <title>SVG Fullscreen Önizleme</title>
   <style>
-    body { 
-      display: flex; 
-      justify-content: center; 
-      align-items: center; 
-      height: 100vh; 
-      margin: 0; 
-      background: #f0f0f0;
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden; /* Kaydırma çubuğu olmasın */
+      background: black;
     }
+
     #svg-container {
       width: 100%;
       height: 100%;
-      border: 1px solid #ccc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
+
     svg {
       width: 100%;
       height: 100%;
+      object-fit: contain; /* Taşma olmadan tüm SVG görünür */
+      display: block;
     }
   </style>
 </head>
@@ -27,14 +33,21 @@
   <div id="svg-container">SVG Yükleniyor...</div>
 
   <script>
-    const svgFile = 'slayt.svg'; // Aynı klasördeki SVG dosya adı
-
+    const svgFile = 'slayt.svg'; // Aynı klasördeki SVG dosyan
     async function loadSVG() {
       try {
-        // cacheBuster ile tarayıcı önbelleğini atla
         const response = await fetch(`${svgFile}?cb=${Date.now()}`);
         if (!response.ok) throw new Error('SVG yüklenemedi!');
-        const svgText = await response.text();
+        let svgText = await response.text();
+
+        // Eğer SVG’nin viewBox’ı yoksa ekle (1920x1080)
+        if (!/viewBox/i.test(svgText)) {
+          svgText = svgText.replace(
+            /<svg([^>]*)>/i,
+            '<svg$1 viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid meet">'
+          );
+        }
+
         document.getElementById('svg-container').innerHTML = svgText;
       } catch (e) {
         document.getElementById('svg-container').textContent = 'SVG yüklenirken hata oluştu: ' + e;
@@ -42,9 +55,7 @@
     }
 
     loadSVG(); // İlk yükleme
-
-    // Her 1 saniyede bir SVG'yi kontrol edip güncelle
-    setInterval(loadSVG, 1000);
+    setInterval(loadSVG, 1000); // 1 saniyede bir güncelle
   </script>
 </body>
 </html>
