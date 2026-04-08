@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ultra Smooth SVG Slayt</title>
+<title>SVG Slayt</title>
 <style>
 html, body {
     margin:0;
@@ -31,12 +31,12 @@ html, body {
 .frame.active { opacity:1; }
 </style>
 <script>
-// Double-buffer
 let aktif = 1;
 let slaytIndex = 0;
 
-// Slayt dosyaları ve ayarları
+// Slayt listesi
 let svgList = ["slayt1.svg","slayt2.svg","slayt3.svg","slayt4.svg"];
+// Her slayt için efekt ve süre
 let slaytAyar = [
     {efekt:"fade", sure:4000},
     {efekt:"zoom", sure:6000},
@@ -44,28 +44,20 @@ let slaytAyar = [
     {efekt:"fade", sure:7000}
 ];
 
-// Arka planda yeni SVG yükleme ve geçiş
-function reloadSVG() {
-    let yeni = aktif===1 ? 2:1;
+function reloadSVG(){
+    let yeni = aktif===1?2:1;
     let aktifFrame = document.getElementById("frame"+aktif);
     let yeniFrame = document.getElementById("frame"+yeni);
 
+    // Sonraki slayt
     slaytIndex = (slaytIndex+1)%svgList.length;
     let svgFile = svgList[slaytIndex];
     let ayar = slaytAyar[slaytIndex];
 
-    // Yeni SVG'yi arka planda yükle, cache engelle
-    let tmp = document.createElement("object");
-    tmp.type="image/svg+xml";
-    tmp.data=svgFile+"?t="+Date.now();
-    tmp.style.display="none";
-    document.body.appendChild(tmp);
+    // Yeni frame data yükleme, cache engelle
+    yeniFrame.data = svgFile+"?t="+Date.now();
 
-    tmp.onload = function() {
-        // Yeni frame hazır, swap yap
-        yeniFrame.data = tmp.data;
-        document.body.removeChild(tmp);
-
+    yeniFrame.onload = function(){
         // Efekt uygulama
         switch(ayar.efekt){
             case "fade":
@@ -86,16 +78,15 @@ function reloadSVG() {
                 break;
         }
         aktif=yeni;
-
-        // Bir sonraki geçiş için timer
+        // Sonraki geçiş için timer
         clearTimeout(window.slaytTimer);
-        window.slaytTimer=setTimeout(reloadSVG,ayar.sure);
+        window.slaytTimer = setTimeout(reloadSVG, ayar.sure);
     }
 }
 
 // Başlangıç
 window.onload=function(){
-    window.slaytTimer=setTimeout(reloadSVG,slaytAyar[0].sure);
+    window.slaytTimer=setTimeout(reloadSVG, slaytAyar[0].sure);
 }
 </script>
 </head>
