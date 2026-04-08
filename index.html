@@ -1,77 +1,108 @@
 <!DOCTYPE html>
 <html lang="tr">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SVG Slayt</title>
-
+<title>Ultra Smooth SVG Slayt</title>
 <style>
 html, body {
-    margin: 0;
-    width: 100%;
-    height: 100%;
-    background: black;
-    overflow: hidden;
+    margin:0;
+    padding:0;
+    width:100%;
+    height:100%;
+    background:black;
+    overflow:hidden;
 }
-
 .container {
     position: relative;
-    width: 100vw;
-    height: 100vh;
+    width:100vw;
+    height:100vh;
+    perspective:1200px;
 }
-
 .frame {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border: none;
-    transition: opacity 0.3s;
-    opacity: 0;
+    position:absolute;
+    width:100%;
+    height:100%;
+    border:none;
+    backface-visibility:hidden;
+    transition: transform 0.8s ease, opacity 0.8s ease;
+    opacity:0;
 }
-
-.frame.active {
-    opacity: 1;
-}
+.frame.active { opacity:1; }
 </style>
-
 <script>
-let aktif = 1; // Hangi frame aktif
-let slaytIndex = 0; // Hangi SVG gösteriliyor
-let svgList = ["slayt.svg", "info.svg"]; // Slayt sırası
+// Double-buffer
+let aktif = 1;
+let slaytIndex = 0;
 
+// Slayt dosyaları ve ayarları
+let svgList = ["slayt1.svg","slayt2.svg","slayt3.svg","slayt4.svg"];
+let slaytAyar = [
+    {efekt:"fade", sure:4000},
+    {efekt:"zoom", sure:6000},
+    {efekt:"cube", sure:5000},
+    {efekt:"fade", sure:7000}
+];
+
+// Arka planda yeni SVG yükleme ve geçiş
 function reloadSVG() {
-    let yeni = aktif === 1 ? 2 : 1;
-    let aktifFrame = document.getElementById("frame" + aktif);
-    let yeniFrame = document.getElementById("frame" + yeni);
+    let yeni = aktif===1 ? 2:1;
+    let aktifFrame = document.getElementById("frame"+aktif);
+    let yeniFrame = document.getElementById("frame"+yeni);
 
-    // Sıradaki SVG
-    slaytIndex = (slaytIndex + 1) % svgList.length;
+    slaytIndex = (slaytIndex+1)%svgList.length;
     let svgFile = svgList[slaytIndex];
+    let ayar = slaytAyar[slaytIndex];
 
-    // Yeni frame veri seti
-    yeniFrame.data = svgFile + "?t=" + Date.now();
+    // Yeni SVG'yi arka planda yükle, cache engelle
+    let tmp = document.createElement("object");
+    tmp.type="image/svg+xml";
+    tmp.data=svgFile+"?t="+Date.now();
+    tmp.style.display="none";
+    document.body.appendChild(tmp);
 
-    yeniFrame.onload = function () {
-        aktifFrame.classList.remove("active");
-        yeniFrame.classList.add("active");
-        aktif = yeni;
+    tmp.onload = function() {
+        // Yeni frame hazır, swap yap
+        yeniFrame.data = tmp.data;
+        document.body.removeChild(tmp);
+
+        // Efekt uygulama
+        switch(ayar.efekt){
+            case "fade":
+                aktifFrame.style.opacity=0;
+                yeniFrame.style.opacity=1;
+                yeniFrame.style.transform="scale(1)";
+                break;
+            case "zoom":
+                aktifFrame.style.opacity=0;
+                yeniFrame.style.opacity=1;
+                yeniFrame.style.transform="scale(1)";
+                break;
+            case "cube":
+                aktifFrame.style.transform="rotateY(-90deg) scale(0.8)";
+                aktifFrame.style.opacity=0;
+                yeniFrame.style.transform="rotateY(0deg) scale(1)";
+                yeniFrame.style.opacity=1;
+                break;
+        }
+        aktif=yeni;
+
+        // Bir sonraki geçiş için timer
+        clearTimeout(window.slaytTimer);
+        window.slaytTimer=setTimeout(reloadSVG,ayar.sure);
     }
 }
 
-// Her 5 saniyede bir slayt geç
-setInterval(reloadSVG, 5000);
+// Başlangıç
+window.onload=function(){
+    window.slaytTimer=setTimeout(reloadSVG,slaytAyar[0].sure);
+}
 </script>
-
 </head>
-
 <body>
-
 <div class="container">
-    <object id="frame1" class="frame active" type="image/svg+xml" data="slayt.svg"></object>
+    <object id="frame1" class="frame active" type="image/svg+xml" data="slayt1.svg"></object>
     <object id="frame2" class="frame" type="image/svg+xml" data=""></object>
 </div>
-
 </body>
-
 </html>
