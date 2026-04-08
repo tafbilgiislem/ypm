@@ -1,41 +1,62 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <title>Canlı Güncellenen SVG Saat</title>
-  <style>
-    #saatContainer {
-      width: 300px;  /* SVG genişliği */
-      height: 300px; /* SVG yüksekliği */
-      border: 1px solid #ccc;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub SVG Canlı Saat</title>
+    <style>
+        /* Sayfa tasarımı için basit stil ayarları */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .clock-wrapper {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 2px solid #e0e0e0;
+        }
+
+        /* SVG'nin boyutlarını buradan ayarlayabilirsin */
+        object {
+            width: 400px;
+            height: 150px;
+            display: block;
+        }
+
+        .info {
+            margin-top: 15px;
+            font-size: 0.9em;
+            color: #666;
+        }
+    </style>
 </head>
 <body>
-  <h1>Canlı Güncellenen SVG Saat</h1>
-  <div id="saatContainer"></div>
 
-  <script>
-    // GitHub Pages üzerinden yayınladığın SVG URL'si
-    const svgUrl = "https://tafbilgiislem.github.io/ypm/saat.svg";
-    const container = document.getElementById("saatContainer");
+    <h1>Canlı Zaman Göstergesi</h1>
 
-    async function loadSVG() {
-      try {
-        const response = await fetch(svgUrl, { cache: "no-cache" }); // cache'i önlemek için
-        if (!response.ok) throw new Error("SVG yüklenemedi");
-        const svgText = await response.text();
-        container.innerHTML = svgText;
-      } catch (err) {
-        console.error("SVG yükleme hatası:", err);
-      }
-    }
+    <div class="clock-wrapper">
+        <object data="https://raw.githubusercontent.com/tafbilgiislem/ypm/main/saat.svg" 
+                type="image/svg+xml">
+            <p>Tarayıcınız bu içeriği görüntüleyemiyor veya bağlantı hatalı.</p>
+        </object>
+    </div>
 
-    // İlk yükleme
-    loadSVG();
+    <div class="info">
+        <p>Veri doğrudan GitHub üzerindeki SVG dosyasından çekilmektedir.</p>
+    </div>
 
-    // 1 saniyede bir yenile
-    setInterval(loadSVG, 1000);
-  </script>
 </body>
 </html>
