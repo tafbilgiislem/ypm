@@ -2879,8 +2879,8 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:zoom="0.74635417"
-     inkscape:cx="960.66992"
-     inkscape:cy="541.9679"
+     inkscape:cx="960"
+     inkscape:cy="543.30774"
      inkscape:window-width="1920"
      inkscape:window-height="1009"
      inkscape:window-x="1912"
@@ -5340,16 +5340,6 @@
        x="1130.0833"
        y="408.05145"
        ry="59.214336" />
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:50.4356px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.383;stroke-dasharray:none"
-       x="1437.2994"
-       y="488.48178"
-       id="text11"><tspan
-         sodipodi:role="line"
-         id="tspan11"
-         x="1437.2994"
-         y="488.48178">TAF TEKNİK KURUL</tspan></text>
   </g>
   <g
      id="g5">
@@ -5361,16 +5351,6 @@
        x="1130.068"
        y="581.45062"
        ry="59.22953" />
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:50.4356px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.38331"
-       x="1437.2994"
-       y="658.73969"
-       id="text12"><tspan
-         sodipodi:role="line"
-         id="tspan12"
-         x="1437.2994"
-         y="658.73969">TAF TEKNİK KURUL</tspan></text>
   </g>
   <g
      id="g14">
@@ -5384,17 +5364,6 @@
          x="924.11029"
          y="408.14389"
          ry="59.121925" />
-      <text
-         xml:space="preserve"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:50.4356px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.38331"
-         x="1015.3699"
-         y="483.96274"
-         id="text13"
-         inkscape:label="title"><tspan
-           sodipodi:role="line"
-           id="tspan13"
-           x="1015.3699"
-           y="483.96274">14:00</tspan></text>
     </g>
     <g
        id="g4">
@@ -5406,16 +5375,49 @@
          x="924.11029"
          y="581.55823"
          ry="59.121925" />
-      <text
-         xml:space="preserve"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:50.4356px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.38331"
-         x="1015.892"
-         y="653.21167"
-         id="text14"><tspan
-           sodipodi:role="line"
-           id="tspan14"
-           x="1015.892"
-           y="653.21167">14:00</tspan></text>
     </g>
   </g>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:50.4356px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.38331"
+     x="1015.892"
+     y="653.21167"
+     id="text14"><tspan
+       sodipodi:role="line"
+       id="tspan14"
+       x="1015.892"
+       y="653.21167">14:00</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:50.4356px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.383;stroke-dasharray:none"
+     x="1437.2994"
+     y="488.48178"
+     id="text11"
+     inkscape:label="title"><tspan
+       sodipodi:role="line"
+       id="tspan11"
+       x="1437.2994"
+       y="488.48178">TAF TEKNİK KURUL</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:50.4356px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.38331"
+     x="1437.2994"
+     y="658.73969"
+     id="text12"
+     inkscape:label="subtitle"><tspan
+       sodipodi:role="line"
+       id="tspan12"
+       x="1437.2994"
+       y="658.73969">TAF TEKNİK KURUL</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:50.4356px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.38331"
+     x="1015.3699"
+     y="483.96274"
+     id="text13"
+     inkscape:label="x"><tspan
+       sodipodi:role="line"
+       id="tspan13"
+       x="1015.3699"
+       y="483.96274">14:00</tspan></text>
 </svg>
