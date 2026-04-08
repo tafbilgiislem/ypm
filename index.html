@@ -1,25 +1,37 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>SVG Yayınlama</title>
-  <style>
-    html, body {
-      margin: 0;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: #f0f0f0;
-    }
-    object {
-      width: 1920px;
-      height: 1080px;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Live SVG</title>
+
+<style>
+body{
+margin:0;
+background:black;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+iframe{
+width:1920px;
+height:1080px;
+border:none;
+}
+</style>
+
+<script>
+setInterval(function(){
+   document.getElementById("svgFrame").src="slayt.svg?t="+new Date().getTime();
+},2000); // 2 saniyede kontrol eder
+</script>
+
 </head>
+
 <body>
-  <!-- SVG dosyasını aynı repodan çağırıyoruz -->
-  <object type="image/svg+xml" data="slayt.svg"></object>
+
+<iframe id="svgFrame" src="image.svg"></iframe>
+
 </body>
 </html>
