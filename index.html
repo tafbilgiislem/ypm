@@ -23,15 +23,12 @@ overflow:hidden;
 .container{
 width:100vw;
 height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
 }
 
-img{
+object{
 width:100vw;
 height:100vh;
-object-fit:contain;
+border:none;
 }
 
 </style>
@@ -39,7 +36,13 @@ object-fit:contain;
 <script>
 
 function reloadSVG(){
-document.getElementById("slayt").src="slayt.svg?t="+Date.now();
+
+let svg = document.getElementById("slayt");
+
+let newData = "slayt.svg?t="+Date.now();
+
+svg.data = newData;
+
 }
 
 setInterval(reloadSVG,2000);
@@ -52,7 +55,10 @@ setInterval(reloadSVG,2000);
 
 <div class="container">
 
-<img id="slayt" src="slayt.svg">
+<object id="slayt"
+type="image/svg+xml"
+data="slayt.svg">
+</object>
 
 </div>
 
