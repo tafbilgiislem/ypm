@@ -2,62 +2,65 @@
 <html lang="tr">
 
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Slayt</title>
+<title>SVG Slayt</title>
 
 <style>
-
-html,body{
-margin:0;
-width:100%;
-height:100%;
-background:black;
-overflow:hidden;
+html, body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    background: black;
+    overflow: hidden;
 }
 
-.container{
-position:relative;
-width:100vw;
-height:100vh;
+.container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
 }
 
-.frame{
-position:absolute;
-width:100%;
-height:100%;
-border:none;
+.frame {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: none;
+    transition: opacity 0.3s;
+    opacity: 0;
 }
 
+.frame.active {
+    opacity: 1;
+}
 </style>
 
 <script>
+let aktif = 1; // Hangi frame aktif
+let slaytIndex = 0; // Hangi SVG gösteriliyor
+let svgList = ["slayt.svg", "info.svg"]; // Slayt sırası
 
-let aktif = 1;
+function reloadSVG() {
+    let yeni = aktif === 1 ? 2 : 1;
+    let aktifFrame = document.getElementById("frame" + aktif);
+    let yeniFrame = document.getElementById("frame" + yeni);
 
-function reloadSVG(){
+    // Sıradaki SVG
+    slaytIndex = (slaytIndex + 1) % svgList.length;
+    let svgFile = svgList[slaytIndex];
 
-let yeni = aktif === 1 ? 2 : 1;
-let aktifFrame = document.getElementById("frame"+aktif);
-let yeniFrame = document.getElementById("frame"+yeni);
+    // Yeni frame veri seti
+    yeniFrame.data = svgFile + "?t=" + Date.now();
 
-yeniFrame.data = "slayt.svg?t="+Date.now();
-
-yeniFrame.onload = function(){
-
-aktifFrame.style.opacity="0";
-yeniFrame.style.opacity="1";
-
-aktif = yeni;
-
+    yeniFrame.onload = function () {
+        aktifFrame.classList.remove("active");
+        yeniFrame.classList.add("active");
+        aktif = yeni;
+    }
 }
 
-}
-
-setInterval(reloadSVG,3000);
-
+// Her 5 saniyede bir slayt geç
+setInterval(reloadSVG, 5000);
 </script>
 
 </head>
@@ -65,21 +68,8 @@ setInterval(reloadSVG,3000);
 <body>
 
 <div class="container">
-
-<object id="frame1"
-class="frame"
-type="image/svg+xml"
-data="slayt.svg"
-style="opacity:1">
-</object>
-
-<object id="frame2"
-class="frame"
-type="image/svg+xml"
-data=""
-style="opacity:0">
-</object>
-
+    <object id="frame1" class="frame active" type="image/svg+xml" data="slayt.svg"></object>
+    <object id="frame2" class="frame" type="image/svg+xml" data=""></object>
 </div>
 
 </body>
