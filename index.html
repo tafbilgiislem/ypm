@@ -1,40 +1,40 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<title>SVG Live Clock</title>
-<style>
-html, body {
-  margin:0;
-  padding:0;
-  width:100%;
-  height:100%;
-  background:black;
-  overflow:hidden;
-}
-#svgFrame {
-  width:100vw;
-  height:100vh;
-  border:none;
-}
-</style>
+  <meta charset="UTF-8">
+  <title>Canlı SVG Saat</title>
+  <style>
+    #saatContainer {
+      width: 300px;  /* SVG genişliği */
+      height: 300px; /* SVG yüksekliği */
+      border: 1px solid #ccc;
+    }
+  </style>
 </head>
 <body>
+  <h1>Canlı Güncellenen SVG Saat</h1>
+  <div id="saatContainer"></div>
 
-<iframe id="svgFrame" src="slayt.svg" frameborder="0"></iframe>
+  <script>
+    const svgUrl = "https://raw.githubusercontent.com/tafbilgiislem/ypm/refs/heads/main/slayt.svg"; 
+    const container = document.getElementById("saatContainer");
 
-<script>
-const svgFile = 'dosya.svg';
+    async function loadSVG() {
+      try {
+        const response = await fetch(svgUrl, { cache: "no-cache" }); // cache'i önlemek için
+        if (!response.ok) throw new Error("SVG yüklenemedi");
+        const svgText = await response.text();
+        container.innerHTML = svgText;
+      } catch (err) {
+        console.error("SVG yükleme hatası:", err);
+      }
+    }
 
-function reloadSVG() {
-  const frame = document.getElementById('svgFrame');
-  // cacheBuster ekleyerek tarayıcı önbelleğe bakmaz
-  frame.src = svgFile + '?v=' + Date.now();
-}
+    // İlk yükleme
+    loadSVG();
 
-// 2 saniyede bir reload
-setInterval(reloadSVG, 2000);
-</script>
-
+    // 1 saniyede bir yenile
+    setInterval(loadSVG, 1000);
+  </script>
 </body>
 </html>
