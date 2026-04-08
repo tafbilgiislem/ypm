@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SVG Slayt</title>
+<title>SVG Slayt – Zoom & Cube</title>
 <style>
 html, body {
     margin:0;
@@ -17,7 +17,7 @@ html, body {
     position: relative;
     width:100vw;
     height:100vh;
-    perspective:1200px;
+    perspective:1200px; /* cube efekti için */
 }
 .frame {
     position:absolute;
@@ -31,53 +31,49 @@ html, body {
 .frame.active { opacity:1; }
 </style>
 <script>
+// Double-buffer kontrolü
 let aktif = 1;
 let slaytIndex = 0;
 
 // Slayt listesi
-let svgList = ["slayt.svg","info.svg","slayt.svg","info.svg"];
-// Her slayt için efekt ve süre
+let svgList = ["slayt.svg","info.svg"];
+
+// Slayt başına efekt ve süre ayarı
 let slaytAyar = [
-    {efekt:"zoom", sure:4000},
-    {efekt:"cube", sure:6000},
-    {efekt:"zoom", sure:5000},
-    {efekt:"cube", sure:7000}
+    {efekt:"zoom", sure:5000},  // slayt.svg
+    {efekt:"cube", sure:7000}   // info.svg
 ];
 
 function reloadSVG(){
-    let yeni = aktif===1?2:1;
+    let yeni = aktif===1 ? 2:1;
     let aktifFrame = document.getElementById("frame"+aktif);
     let yeniFrame = document.getElementById("frame"+yeni);
 
     // Sonraki slayt
-    slaytIndex = (slaytIndex+1)%svgList.length;
+    slaytIndex = (slaytIndex+1) % svgList.length;
     let svgFile = svgList[slaytIndex];
     let ayar = slaytAyar[slaytIndex];
 
-    // Yeni frame data yükleme, cache engelle
+    // Yeni frame yükleme ve cache engelle
     yeniFrame.data = svgFile+"?t="+Date.now();
 
     yeniFrame.onload = function(){
         // Efekt uygulama
         switch(ayar.efekt){
-            case "fade":
-                aktifFrame.style.opacity=0;
-                yeniFrame.style.opacity=1;
-                yeniFrame.style.transform="scale(1)";
-                break;
             case "zoom":
-                aktifFrame.style.opacity=0;
-                yeniFrame.style.opacity=1;
-                yeniFrame.style.transform="scale(1)";
+                aktifFrame.style.opacity = 0;
+                yeniFrame.style.opacity = 1;
+                yeniFrame.style.transform = "scale(1)";
                 break;
             case "cube":
-                aktifFrame.style.transform="rotateY(-90deg) scale(0.8)";
-                aktifFrame.style.opacity=0;
-                yeniFrame.style.transform="rotateY(0deg) scale(1)";
-                yeniFrame.style.opacity=1;
+                aktifFrame.style.transform = "rotateY(-90deg) scale(0.8)";
+                aktifFrame.style.opacity = 0;
+                yeniFrame.style.transform = "rotateY(0deg) scale(1)";
+                yeniFrame.style.opacity = 1;
                 break;
         }
-        aktif=yeni;
+        aktif = yeni;
+
         // Sonraki geçiş için timer
         clearTimeout(window.slaytTimer);
         window.slaytTimer = setTimeout(reloadSVG, ayar.sure);
@@ -86,13 +82,13 @@ function reloadSVG(){
 
 // Başlangıç
 window.onload=function(){
-    window.slaytTimer=setTimeout(reloadSVG, slaytAyar[0].sure);
+    window.slaytTimer = setTimeout(reloadSVG, slaytAyar[0].sure);
 }
 </script>
 </head>
 <body>
 <div class="container">
-    <object id="frame1" class="frame active" type="image/svg+xml" data="slayt1.svg"></object>
+    <object id="frame1" class="frame active" type="image/svg+xml" data="slayt.svg"></object>
     <object id="frame2" class="frame" type="image/svg+xml" data=""></object>
 </div>
 </body>
