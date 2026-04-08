@@ -4,7 +4,7 @@
    height="1080"
    version="1.1"
    id="svg1"
-   sodipodi:docname="çizim.svg"
+   sodipodi:docname="slayt.svg"
    inkscape:version="1.4.3 (0d15f75, 2025-12-25)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -2879,11 +2879,11 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:zoom="0.74635417"
-     inkscape:cx="960"
-     inkscape:cy="540.62805"
+     inkscape:cx="960.66992"
+     inkscape:cy="541.9679"
      inkscape:window-width="1920"
      inkscape:window-height="1009"
-     inkscape:window-x="-8"
+     inkscape:window-x="1912"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg1" />
@@ -2895,6 +2895,18 @@
      x="-0.30834502"
      y="0.69165498"
      sodipodi:insensitive="true" />
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:109.881px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;writing-mode:lr-tb;direction:ltr;fill:#ffffff;stroke-width:2.37986;stroke-linecap:round;paint-order:markers fill stroke"
+     x="488.78653"
+     y="970.78906"
+     id="text15"
+     transform="scale(1.0740613,0.93104555)"><tspan
+       sodipodi:role="line"
+       id="tspan15"
+       x="488.78653"
+       y="970.78906"
+       style="stroke-width:2.37986">HOŞ GELDİNİZ</tspan></text>
   <text
      id="dateText"
      x="170.30901"
@@ -5377,7 +5389,8 @@
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:50.4356px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.38331"
          x="1015.3699"
          y="483.96274"
-         id="text13"><tspan
+         id="text13"
+         inkscape:label="title"><tspan
            sodipodi:role="line"
            id="tspan13"
            x="1015.3699"
@@ -5405,16 +5418,4 @@
            y="653.21167">14:00</tspan></text>
     </g>
   </g>
-  <text
-     xml:space="preserve"
-     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:109.881px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;writing-mode:lr-tb;direction:ltr;fill:#ffffff;stroke-width:2.37986;stroke-linecap:round;paint-order:markers fill stroke"
-     x="488.78653"
-     y="970.78906"
-     id="text15"
-     transform="scale(1.0740613,0.93104555)"><tspan
-       sodipodi:role="line"
-       id="tspan15"
-       x="488.78653"
-       y="970.78906"
-       style="stroke-width:2.37986">HOŞ GELDİNİZ</tspan></text>
 </svg>
