@@ -27,11 +27,12 @@
   <div id="svg-container">SVG Yükleniyor...</div>
 
   <script>
-    const svgUrl = 'slayt.svg'; // Buraya Github'daki SVG dosyanın ham linkini koy
+    const svgFile = 'slayt.svg'; // Aynı klasördeki SVG dosya adı
 
     async function loadSVG() {
       try {
-        const response = await fetch(svgUrl, { cache: "no-store" });
+        // cacheBuster ile tarayıcı önbelleğini atla
+        const response = await fetch(`${svgFile}?cb=${Date.now()}`);
         if (!response.ok) throw new Error('SVG yüklenemedi!');
         const svgText = await response.text();
         document.getElementById('svg-container').innerHTML = svgText;
@@ -40,11 +41,10 @@
       }
     }
 
-    // İlk yükleme
-    loadSVG();
+    loadSVG(); // İlk yükleme
 
-    // 2 saniyede bir SVG'yi kontrol edip güncelle
-    setInterval(loadSVG, 2000);
+    // Her 1 saniyede bir SVG'yi kontrol edip güncelle
+    setInterval(loadSVG, 1000);
   </script>
 </body>
 </html>
