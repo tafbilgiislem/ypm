@@ -1,61 +1,50 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <title>SVG Fullscreen Önizleme</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden; /* Kaydırma çubuğu olmasın */
-      background: black;
-    }
+<meta charset="UTF-8">
+<title>SVG Live Fullscreen</title>
 
-    #svg-container {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+<style>
+html,body{
+  margin:0;
+  padding:0;
+  width:100%;
+  height:100%;
+  background:black;
+  overflow:hidden;
+}
 
-    svg {
-      width: 100%;
-      height: 100%;
-      object-fit: contain; /* Taşma olmadan tüm SVG görünür */
-      display: block;
-    }
-  </style>
+#svgFrame{
+  width:100vw;
+  height:100vh;
+  border:none;
+}
+</style>
+
 </head>
+
 <body>
-  <div id="svg-container">SVG Yükleniyor...</div>
 
-  <script>
-    const svgFile = 'slayt.svg'; // Aynı klasördeki SVG dosyan
-    async function loadSVG() {
-      try {
-        const response = await fetch(`${svgFile}?cb=${Date.now()}`);
-        if (!response.ok) throw new Error('SVG yüklenemedi!');
-        let svgText = await response.text();
+<object id="svgFrame" data="dosya.svg" type="image/svg+xml"></object>
 
-        // Eğer SVG’nin viewBox’ı yoksa ekle (1920x1080)
-        if (!/viewBox/i.test(svgText)) {
-          svgText = svgText.replace(
-            /<svg([^>]*)>/i,
-            '<svg$1 viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid meet">'
-          );
-        }
+<script>
 
-        document.getElementById('svg-container').innerHTML = svgText;
-      } catch (e) {
-        document.getElementById('svg-container').textContent = 'SVG yüklenirken hata oluştu: ' + e;
-      }
-    }
+const svgFile = "slayt.svg";
 
-    loadSVG(); // İlk yükleme
-    setInterval(loadSVG, 1000); // 1 saniyede bir güncelle
-  </script>
+function reloadSVG(){
+  const frame = document.getElementById("svgFrame");
+  
+  // cache kırıcı
+  frame.data = svgFile + "?v=" + Date.now();
+}
+
+// ilk yükleme
+reloadSVG();
+
+// 1 saniyede bir güncelle
+setInterval(reloadSVG,1000);
+
+</script>
+
 </body>
 </html>
