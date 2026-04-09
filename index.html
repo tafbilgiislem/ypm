@@ -2,23 +2,16 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>Animasyon Senkron Slider</title>
+<title>Flicker-Free Real-Time SVG Slider</title>
 <style>
 html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:#000;display:flex;justify-content:center;align-items:center;}
 #slider{position:relative;width:100vw;height:100vh;}
 .slide{position:absolute;width:100%;height:100%;opacity:0;transition:all 1s ease-in-out;}
 .slide.active{opacity:1;}
-.fade{opacity:0;}.fade.active{opacity:1;}
-.slide-left{transform:translateX(100%);opacity:0;}.slide-left.active{transform:translateX(0);opacity:1;transition:all 1s ease-in-out;}
-.zoom{transform:scale(0.5);opacity:0;}.zoom.active{transform:scale(1);opacity:1;transition:all 1s ease-in-out;}
-.slide-up { transform:translateY(100%); opacity:0; } .slide-up.active { transform:translateY(0); opacity:1; transition:all 1s ease-in-out; }
-.rotate-zoom { transform:rotate(-180deg) scale(0.5); opacity:0; } .rotate-zoom.active { transform:rotate(0deg) scale(1); opacity:1; transition:all 1.5s ease-in-out; }
-.circle{clip-path: circle(0% at 50% 50%);opacity:0;}.circle.active{clip-path: circle(100% at 50% 50%);opacity:1;transition: all 4s ease;}
-.wave{transform: translateY(100%) rotate(10deg);opacity:0;}.wave.active{transform: translateY(0) rotate(0);opacity:1;transition: all 2s ease;}
-.curtain{clip-path: inset(0 50% 0 50%);opacity:0;}.curtain.active{clip-path: inset(0 0 0 0);opacity:1;transition: all 5s ease;}
-.spin-zoom{transform: scale(0.2) rotate(-360deg);opacity:0;}.spin-zoom.active{transform: scale(1) rotate(0);opacity:1;transition: all 1.9s ease;}
-.rotate3d {transform: rotate3d(1,1,0,90deg);opacity:0;}.rotate3d.active{transform: rotate3d(0,0,0,0deg);opacity:1;transition: all 1.9s ease;}
-.cube{transform:rotateY(180deg) scale(.5);opacity:0;}.cube.active{transform:rotateY(0) scale(1);opacity:1;transition:1.5s;}
+.zoom{transform:scale(0.5);opacity:0;}
+.zoom.active{transform:scale(1);opacity:1;transition:all 1s ease-in-out;}
+.cube{transform:rotateY(180deg) scale(.5);opacity:0;}
+.cube.active{transform:rotateY(0) scale(1);opacity:1;transition:1.5s;}
 </style>
 </head>
 <body>
@@ -35,20 +28,19 @@ const svgFiles = [
 
 let aktif = 1; // frame1 aktif
 let index = 0;
-
 const frame1 = document.getElementById("frame1");
 const frame2 = document.getElementById("frame2");
 const frames = [frame1, frame2];
 
-// --- SVG yükleme (cache bypass) ---
+// --- SVG yükleme ---
 function loadSVG(slide, frame){
-  frame.className = "slide " + slide.effect;
+  frame.className = "slide "+slide.effect;
   frame.data = slide.file + "?t=" + Date.now();
 }
 
-// --- Slayt geçişi (double-buffer + per-slide süre) ---
+// --- Slayt geçişi ---
 function showNextSlide(){
-  let yeni = aktif === 1 ? 2 : 1;
+  let yeni = aktif===1 ? 2 : 1;
   let aktifFrame = frames[aktif-1];
   let yeniFrame = frames[yeni-1];
   let slide = svgFiles[index];
@@ -59,7 +51,7 @@ function showNextSlide(){
     aktifFrame.classList.remove("active");
     yeniFrame.classList.add("active");
     aktif = yeni;
-    index = (index + 1) % svgFiles.length;
+    index = (index+1) % svgFiles.length;
     setTimeout(showNextSlide, slide.duration);
   };
 }
@@ -71,17 +63,25 @@ window.onload = function(){
   setTimeout(showNextSlide, svgFiles[0].duration);
 };
 
-// --- Gerçek zamanlı SVG güncelleme ---
+// --- Gerçek zamanlı flicker-free güncelleme ---
 setInterval(()=>{
   let aktifFrame = frames[aktif-1];
+  let yedekFrame = frames[aktif===1 ? 1 : 0]; // arka plan frame
   let currentSlide = svgFiles[index===0 ? svgFiles.length-1 : index-1];
 
   fetch(currentSlide.file, {cache:"no-store"}).then(resp=>{
     if(resp.ok){
-      loadSVG(currentSlide, aktifFrame);
+      // Arka planda yükle
+      loadSVG(currentSlide, yedekFrame);
+      yedekFrame.onload = function(){
+        // Yükleme tamamlanınca swap
+        aktifFrame.classList.remove("active");
+        yedekFrame.classList.add("active");
+        aktif = aktif===1 ? 2 : 1;
+      };
     }
   });
-}, 1000); // 1 saniyede bir kontrol
+}, 1000);
 </script>
 </body>
 </html>
