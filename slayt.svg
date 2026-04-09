@@ -2912,8 +2912,7 @@
      fill="#333"
      cursor="move"
      style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:60.8664px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;stroke-width:2.53611"
-     transform="scale(1.3039624,0.76689328)"
-     sodipodi:insensitive="true">TARİH</text>
+     transform="scale(1.3039624,0.76689328)">TARİH</text>
   <text
      id="timeText"
      x="1019.6993"
@@ -2923,8 +2922,7 @@
      fill="#333"
      cursor="move"
      style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:75.8993px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;display:inline;fill:#ffffff;stroke-width:3.16247"
-     transform="scale(1.3147113,0.76062326)"
-     sodipodi:insensitive="true">SAAT</text>
+     transform="scale(1.3147113,0.76062326)">SAAT</text>
   <script
      type="application/ecmascript"
      id="script1">
@@ -5337,26 +5335,27 @@
      style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:50.4356px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.38331"
      x="1015.892"
      y="653.21167"
-     id="text14">20:00</text>
+     id="text14"
+     inkscape:label="4">20:00</text>
   <text
      xml:space="preserve"
      style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:50.4356px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.383;stroke-dasharray:none"
      x="1437.2994"
      y="488.48178"
      id="text11"
-     inkscape:label="title">KÜLÜPLER TEKNİK </text>
+     inkscape:label="1">KÜLÜPLER TEKNİK </text>
   <text
      xml:space="preserve"
      style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:50.4356px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.38331"
      x="1437.2994"
      y="658.73969"
      id="text12"
-     inkscape:label="subtitle">UEFA MAÇ YAYINI</text>
+     inkscape:label="3">UEFA MAÇ YAYINI</text>
   <text
      xml:space="preserve"
      style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:50.4356px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.38331"
      x="1015.3699"
      y="483.96274"
      id="text13"
-     inkscape:label="x">19:00</text>
+     inkscape:label="2">19:00</text>
 </svg>
