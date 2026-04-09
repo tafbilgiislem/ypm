@@ -2,14 +2,24 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>Animasyon Senkron Slider</title>
+<title>Gerçek Zamanlı Flicker-Free SVG Slider</title>
 <style>
 html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:#000;display:flex;justify-content:center;align-items:center;}
 #slider{position:relative;width:100vw;height:100vh;}
 .slide{position:absolute;width:100%;height:100%;opacity:0;transition:all 1s ease-in-out;}
 .slide.active{opacity:1;}
-.zoom{transform:scale(0.5);opacity:0;}.zoom.active{transform:scale(1);opacity:1;transition:all 1s ease-in-out;}
-.cube{transform:rotateY(180deg) scale(.5);opacity:0;}.cube.active{transform:rotateY(0) scale(1);opacity:1;transition:1.5s;}
+/* Zoom efekti için sürekli animasyon */
+@keyframes zoomAnim {
+  0%   { transform: scale(0.5); }
+  50%  { transform: scale(1.05); }
+  100% { transform: scale(0.5); }
+}
+.zoom.active { 
+  animation: zoomAnim 10s infinite ease-in-out; 
+}
+/* Cube geçişi */
+.cube{transform:rotateY(180deg) scale(0.5);opacity:0;}
+.cube.active{transform:rotateY(0) scale(1);opacity:1;transition:1.5s;}
 </style>
 </head>
 <body>
@@ -70,6 +80,7 @@ setInterval(()=>{
 
   fetch(currentSlide.file, {cache:"no-store"}).then(resp=>{
     if(resp.ok){
+      // Arka planda yükle
       loadSVG(currentSlide, yedekFrame);
       yedekFrame.onload = function(){
         aktifFrame.classList.remove("active");
