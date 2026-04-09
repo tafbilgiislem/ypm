@@ -8,58 +8,77 @@ html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:#
 #slider{position:relative;width:100vw;height:100vh;}
 .slide{position:absolute;width:100%;height:100%;opacity:0;transition:all 1s ease-in-out;}
 .slide.active{opacity:1;}
-.fade{opacity:0;}.fade.active{opacity:1;}
-.slide-left{transform:translateX(100%);opacity:0;}.slide-left.active{transform:translateX(0);opacity:1;transition:all 1s ease-in-out;}
 .zoom{transform:scale(0.5);opacity:0;}.zoom.active{transform:scale(1);opacity:1;transition:all 1s ease-in-out;}
-.slide-up { transform:translateY(100%); opacity:0; } .slide-up.active { transform:translateY(0); opacity:1; transition:all 1s ease-in-out; }
-.rotate-zoom { transform:rotate(-180deg) scale(0.5); opacity:0; } .rotate-zoom.active { transform:rotate(0deg) scale(1); opacity:1; transition:all 1.5s ease-in-out; }
-.circle{clip-path: circle(0% at 50% 50%);opacity:0;}.circle.active{clip-path: circle(100% at 50% 50%);opacity:1;transition: all 4s ease;}
-.wave{transform: translateY(100%) rotate(10deg);opacity:0;}.wave.active{transform: translateY(0) rotate(0);opacity:1;transition: all 2s ease;}
-.curtain{clip-path: inset(0 50% 0 50%);opacity:0;}.curtain.active{clip-path: inset(0 0 0 0);opacity:1;transition: all 5s ease;}
-.spin-zoom{transform: scale(0.2) rotate(-360deg);opacity:0;}.spin-zoom.active{transform: scale(1) rotate(0);opacity:1;transition: all 1.9s ease;}
-.rotate3d {transform: rotate3d(1,1,0,90deg);opacity:0;}.rotate3d.active{transform: rotate3d(0,0,0,0deg);opacity:1;transition: all 1.9s ease;}
 .cube{transform:rotateY(180deg) scale(.5);opacity:0;}.cube.active{transform:rotateY(0) scale(1);opacity:1;transition:1.5s;}
 </style>
 </head>
 <body>
-<div id="slider"></div>
+<div id="slider">
+  <object id="frame1" class="slide active"></object>
+  <object id="frame2" class="slide"></object>
+</div>
+
 <script>
 const svgFiles = [
   {file:"slayt.svg", effect:"zoom", duration:10000},
   {file:"info.svg", effect:"cube", duration:5000},
 ];
 
-const slider=document.getElementById("slider");
-let slides=[];
-let currentIndex=0;
+let aktif = 1; // frame1 aktif
+let index = 0;
 
-svgFiles.forEach((s,i)=>{
-  const obj=document.createElement("object");
-  obj.data=s.file;
-  obj.type="image/svg+xml";
-  obj.classList.add("slide",s.effect);
-  obj.style.width="100%";
-  obj.style.height="100%";
-  obj.dataset.duration=s.duration; // animasyon süresi
-  slider.appendChild(obj);
-  slides.push(obj);
-});
+const frame1 = document.getElementById("frame1");
+const frame2 = document.getElementById("frame2");
+const frames = [frame1, frame2];
 
-function showSlide(index){
-  slides.forEach((slide,i)=>slide.classList.remove("active"));
-  const currentSlide=slides[index];
-  currentSlide.classList.add("active");
-
-  const duration=parseInt(currentSlide.dataset.duration,10);
-  currentIndex=index;
-  let next=currentIndex+1;
-  if(next>=slides.length)next=0;
-
-  setTimeout(()=>showSlide(next),duration);
+// --- SVG yükleme (cache bypass) ---
+function loadSVG(slide, frame){
+  frame.className = "slide "+slide.effect;
+  frame.data = slide.file + "?t=" + Date.now();
 }
 
-// Başlat
-showSlide(0);
+// --- Slayt geçişi (double-buffer + per-slide süre) ---
+function showNextSlide(){
+  let yeni = aktif===1 ? 2 : 1;
+  let aktifFrame = frames[aktif-1];
+  let yeniFrame = frames[yeni-1];
+  let slide = svgFiles[index];
+
+  loadSVG(slide, yeniFrame);
+
+  yeniFrame.onload = function(){
+    aktifFrame.classList.remove("active");
+    yeniFrame.classList.add("active");
+    aktif = yeni;
+    index = (index+1) % svgFiles.length;
+    setTimeout(showNextSlide, slide.duration);
+  };
+}
+
+// --- Başlat ---
+window.onload = function(){
+  frame1.data = svgFiles[0].file + "?t=" + Date.now();
+  index = 1;
+  setTimeout(showNextSlide, svgFiles[0].duration);
+};
+
+// --- Gerçek zamanlı SVG güncelleme (flicker-free) ---
+setInterval(()=>{
+  let aktifFrame = frames[aktif-1];
+  let yedekFrame = frames[aktif===1 ? 1 : 0]; // arka plan frame
+  let currentSlide = svgFiles[index===0 ? svgFiles.length-1 : index-1];
+
+  fetch(currentSlide.file, {cache:"no-store"}).then(resp=>{
+    if(resp.ok){
+      loadSVG(currentSlide, yedekFrame);
+      yedekFrame.onload = function(){
+        aktifFrame.classList.remove("active");
+        yedekFrame.classList.add("active");
+        aktif = aktif===1 ? 2 : 1;
+      };
+    }
+  });
+}, 1000); // 1 saniyede bir kontrol
 </script>
 </body>
 </html>
