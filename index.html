@@ -2,94 +2,174 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SVG Slayt – Zoom & Cube</title>
+<title>Animasyon Senkron Slider</title>
+
 <style>
-html, body {
-    margin:0;
-    padding:0;
-    width:100%;
-    height:100%;
-    background:black;
-    overflow:hidden;
+
+html,body{
+margin:0;
+padding:0;
+width:100%;
+height:100%;
+overflow:hidden;
+background:#000;
+display:flex;
+justify-content:center;
+align-items:center;
 }
-.container {
-    position: relative;
-    width:100vw;
-    height:100vh;
-    perspective:1200px; /* cube efekti için */
+
+#slider{
+position:relative;
+width:100vw;
+height:100vh;
 }
-.frame {
-    position:absolute;
-    width:100%;
-    height:100%;
-    border:none;
-    backface-visibility:hidden;
-    transition: transform 0.8s ease, opacity 0.8s ease;
-    opacity:0;
+
+.slide{
+position:absolute;
+width:100%;
+height:100%;
+opacity:0;
+transition:all 1s ease-in-out;
 }
-.frame.active { opacity:1; }
+
+.slide.active{
+opacity:1;
+}
+
+/* Efektler */
+
+.zoom{
+transform:scale(0.5);
+opacity:0;
+}
+
+.zoom.active{
+transform:scale(1);
+opacity:1;
+transition:all 1s ease-in-out;
+}
+
+.cube{
+transform:rotateY(180deg) scale(.5);
+opacity:0;
+}
+
+.cube.active{
+transform:rotateY(0) scale(1);
+opacity:1;
+transition:1.5s;
+}
+
 </style>
+
+</head>
+
+<body>
+
+<div id="slider"></div>
+
 <script>
-// Double-buffer kontrolü
-let aktif = 1;
-let slaytIndex = 0;
 
-// Slayt listesi
-let svgList = ["slayt.svg","info.svg"];
+const svgFiles = [
 
-// Slayt başına efekt ve süre ayarı
-let slaytAyar = [
-    {efekt:"zoom", sure:5000},  // slayt.svg
-    {efekt:"cube", sure:7000}   // info.svg
+{file:"slayt.svg",effect:"zoom",duration:10000},
+
+{file:"info.svg",effect:"cube",duration:6000}
+
 ];
 
-function reloadSVG(){
-    let yeni = aktif===1 ? 2:1;
-    let aktifFrame = document.getElementById("frame"+aktif);
-    let yeniFrame = document.getElementById("frame"+yeni);
+const slider=document.getElementById("slider");
 
-    // Sonraki slayt
-    slaytIndex = (slaytIndex+1) % svgList.length;
-    let svgFile = svgList[slaytIndex];
-    let ayar = slaytAyar[slaytIndex];
+let slides=[];
 
-    // Yeni frame yükleme ve cache engelle
-    yeniFrame.data = svgFile+"?t="+Date.now();
+let currentIndex=0;
 
-    yeniFrame.onload = function(){
-        // Efekt uygulama
-        switch(ayar.efekt){
-            case "zoom":
-                aktifFrame.style.opacity = 0;
-                yeniFrame.style.opacity = 1;
-                yeniFrame.style.transform = "scale(1)";
-                break;
-            case "cube":
-                aktifFrame.style.transform = "rotateY(-90deg) scale(0.8)";
-                aktifFrame.style.opacity = 0;
-                yeniFrame.style.transform = "rotateY(0deg) scale(1)";
-                yeniFrame.style.opacity = 1;
-                break;
-        }
-        aktif = yeni;
 
-        // Sonraki geçiş için timer
-        clearTimeout(window.slaytTimer);
-        window.slaytTimer = setTimeout(reloadSVG, ayar.sure);
-    }
+// SVG preload oluştur
+svgFiles.forEach((s)=>{
+
+const obj=document.createElement("object");
+
+obj.type="image/svg+xml";
+
+obj.classList.add("slide",s.effect);
+
+obj.style.width="100%";
+
+obj.style.height="100%";
+
+obj.dataset.file=s.file;
+
+obj.dataset.duration=s.duration;
+
+slider.appendChild(obj);
+
+slides.push(obj);
+
+});
+
+
+// SVG yükleme fonksiyonu (cache bypass)
+function loadSVG(slide){
+
+let file=slide.dataset.file;
+
+slide.data=file+"?t="+Date.now();
+
 }
 
-// Başlangıç
-window.onload=function(){
-    window.slaytTimer = setTimeout(reloadSVG, slaytAyar[0].sure);
+
+// Slayt göster
+function showSlide(index){
+
+slides.forEach(slide=>slide.classList.remove("active"));
+
+const currentSlide=slides[index];
+
+loadSVG(currentSlide);
+
+currentSlide.classList.add("active");
+
+const duration=parseInt(currentSlide.dataset.duration);
+
+currentIndex=index;
+
+let next=currentIndex+1;
+
+if(next>=slides.length) next=0;
+
+
+// Sonraki slayt
+setTimeout(()=>{
+
+showSlide(next);
+
+},duration);
+
 }
+
+
+// Otomatik SVG update kontrol (dosya değişirse)
+setInterval(()=>{
+
+slides.forEach(slide=>{
+
+if(slide.classList.contains("active")){
+
+loadSVG(slide);
+
+}
+
+});
+
+},3000);
+
+
+// Başlat
+showSlide(0);
+
 </script>
-</head>
-<body>
-<div class="container">
-    <object id="frame1" class="frame active" type="image/svg+xml" data="slayt.svg"></object>
-    <object id="frame2" class="frame" type="image/svg+xml" data=""></object>
-</div>
+
 </body>
+
 </html>
