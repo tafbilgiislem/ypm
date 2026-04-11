@@ -1,75 +1,194 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<title>Animasyon Senkron Slider</title>
-<style>
-html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:#000;display:flex;justify-content:center;align-items:center;}
-#slider{position:relative;width:100vw;height:100vh;}
-.slide{position:absolute;width:100%;height:100%;opacity:0;transition:all 1s ease-in-out;}
-.slide.active{opacity:1;}
-.zoom{transform:scale(0.5);opacity:0;}.zoom.active{transform:scale(1);opacity:1;transition:all 1s ease-in-out;}
-.cube{transform:rotateY(180deg) scale(.5);opacity:0;}.cube.active{transform:rotateY(0) scale(1);opacity:1;transition:1.5s;}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SVG Pro Editor | Her Şey Dahil</title>
+    <style>
+        :root { --accent: #10b981; --bg: #0f172a; --panel: #1e293b; --border: #334155; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: white; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+        /* Modern Giriş Ekranı */
+        #login-screen { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 10000; }
+        .login-card { background: var(--panel); padding: 40px; border-radius: 16px; width: 90%; max-width: 380px; text-align: center; border: 1px solid var(--border); box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
+        .login-card h1 { margin-bottom: 20px; font-size: 24px; }
+        .login-card input { width: 100%; padding: 14px; margin-bottom: 15px; border-radius: 10px; border: 1px solid var(--border); background: #0f172a; color: white; font-size: 16px; text-align: center; }
+        .login-card button { width: 100%; padding: 14px; background: var(--accent); border: none; color: white; font-weight: bold; border-radius: 10px; cursor: pointer; }
+
+        /* Ana Uygulama */
+        #app-container { display: none; height: 100vh; width: 100vw; flex-direction: row; }
+        @media (max-width: 1023px) { #app-container { flex-direction: column; } }
+
+        #sidebar { display: flex; flex-direction: column; background: var(--panel); width: 350px; border-right: 1px solid var(--border); flex-shrink: 0; }
+        @media (max-width: 1023px) { #sidebar { width: 100%; height: 50vh; order: 2; } #main-view { height: 50vh; order: 1; } }
+
+        /* Üst Navigasyon */
+        .sidebar-top-nav { padding: 12px; border-bottom: 2px solid var(--border); background: #111827; flex-shrink: 0; }
+        .nav-row { display: flex; gap: 8px; margin-top: 8px; }
+        #file-selector { width: 100%; padding: 10px; border-radius: 8px; background: #000; color: #fff; border: 1px solid var(--border); cursor: pointer; }
+
+        /* Editör Alanları */
+        #editor-fields { flex: 1; overflow-y: auto; padding: 15px; background: rgba(0,0,0,0.1); }
+        .field-box { background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 12px; padding: 15px; margin-bottom: 15px; }
+        .text-input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: #000; color: #fff; margin-bottom: 10px; }
+        
+        .duzenlenebilir { cursor: move; user-select: none; }
+
+        /* Butonlar */
+        #save-btn { flex: 2; padding: 12px; background: var(--accent); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .exit-btn { flex: 1; padding: 12px; background: #334155; color: white; border: none; border-radius: 8px; cursor: pointer; }
+
+        #main-view { flex: 1; background: #020617; display: flex; align-items: center; justify-content: center; overflow: auto; padding: 20px; }
+        #svg-wrapper { background: white; box-shadow: 0 0 40px rgba(0,0,0,0.6); position: relative; }
+        svg { max-width: 100%; height: auto; display: block; overflow: visible; }
+        #status-info { position: fixed; top: 0; width: 100%; background: var(--accent); color: white; text-align: center; padding: 8px; font-weight: bold; z-index: 11000; display: none; }
+    </style>
 </head>
 <body>
-<div id="slider"></div>
+
+<div id="status-info">YÜKLENİYOR...</div>
+
+<div id="login-screen">
+    <div class="login-card">
+        <h1>Sistem Girişi</h1>
+        <input type="password" id="passInput" placeholder="Şifre">
+        <button onclick="login()">GİRİŞ YAP</button>
+    </div>
+</div>
+
+<div id="app-container">
+    <div id="main-view">
+        <div id="svg-wrapper"><div id="canvas-inner"></div></div>
+    </div>
+    <div id="sidebar">
+        <div class="sidebar-top-nav">
+            <select id="file-selector" onchange="loadSlide()">
+                <option value="slayt.svg">Ana Slayt</option>
+                <option value="info.svg">Kampanya</option>
+                <option value="duyuru.svg">Duyuru</option>
+            </select>
+            <div class="nav-row">
+                <button id="save-btn" onclick="saveData()">KAYDET</button>
+                <button class="exit-btn" onclick="location.reload()">ÇIKIŞ</button>
+            </div>
+        </div>
+        <div id="editor-fields"></div>
+    </div>
+</div>
 
 <script>
-// --- Slider tanımı ---
-const svgFiles = [
-  {file:"slayt.svg", effect:"zoom", duration:10000},
-  {file:"info.svg", effect:"cube", duration:5000},
-];
+    const WORKER_URL = "https://githubtoken.tafbilgiislem.workers.dev/"; // Kendi URL'nizi buraya yazın
+    let SHA_KEY = "";
+    let SESSION_PASS = "";
+    let selectedElement = null;
+    let offset = { x: 0, y: 0 };
 
-const slider = document.getElementById("slider");
-let slides = [];
-let currentIndex = 0;
+    async function login() {
+        const pass = document.getElementById('passInput').value.trim();
+        if(!pass) return;
+        SESSION_PASS = pass;
+        await loadSlide();
+    }
 
-// --- SVG object ekleme ---
-svgFiles.forEach((s, i) => {
-  const obj = document.createElement("object");
-  obj.data = s.file;
-  obj.type = "image/svg+xml";
-  obj.classList.add("slide", s.effect);
-  obj.style.width = "100%";
-  obj.style.height = "100%";
-  obj.dataset.duration = s.duration;
-  slider.appendChild(obj);
-  slides.push(obj);
-});
+    async function loadSlide() {
+        const fileName = document.getElementById('file-selector').value;
+        const status = document.getElementById('status-info');
+        status.innerText = fileName.toUpperCase() + " YÜKLENİYOR...";
+        status.style.display = "block";
 
-// --- Slide gösterimi ---
-function showSlide(index){
-  slides.forEach((slide) => slide.classList.remove("active"));
-  const currentSlide = slides[index];
-  currentSlide.classList.add("active");
+        try {
+            const res = await fetch(WORKER_URL, { headers: { "X-Auth-Key": SESSION_PASS, "X-File-Name": fileName } });
+            if (res.status === 401) { alert("Şifre Hatalı!"); status.style.display="none"; return; }
+            const data = await res.json();
+            SHA_KEY = data.sha;
+            document.getElementById('login-screen').style.display = "none";
+            document.getElementById('app-container').style.display = "flex";
+            document.getElementById('canvas-inner').innerHTML = decodeURIComponent(escape(atob(data.content)));
+            initDragAndDrop();
+            renderFields();
+            status.style.display = "none";
+        } catch (e) { alert("Bağlantı Hatası!"); status.style.display="none"; }
+    }
 
-  const duration = parseInt(currentSlide.dataset.duration,10);
-  currentIndex = index;
-  let next = currentIndex + 1;
-  if(next >= slides.length) next = 0;
+    function initDragAndDrop() {
+        const svg = document.querySelector('#canvas-inner svg');
+        const start = (e) => {
+            const t = e.target.closest('.duzenlenebilir');
+            if (t) {
+                selectedElement = t;
+                const c = getCoords(e);
+                offset.x = c.x - (parseFloat(t.getAttribute("x")) || 0);
+                offset.y = c.y - (parseFloat(t.getAttribute("y")) || 0);
+            }
+        };
+        const move = (e) => {
+            if (selectedElement) {
+                e.preventDefault();
+                const c = getCoords(e);
+                selectedElement.setAttribute("x", c.x - offset.x);
+                selectedElement.setAttribute("y", c.y - offset.y);
+            }
+        };
+        const getCoords = (e) => {
+            const CTM = svg.getScreenCTM();
+            const touch = e.touches ? e.touches[0] : e;
+            return { x: (touch.clientX - CTM.e) / CTM.a, y: (touch.clientY - CTM.f) / CTM.d };
+        };
+        svg.addEventListener('mousedown', start); svg.addEventListener('touchstart', start, {passive:false});
+        window.addEventListener('mousemove', move); window.addEventListener('touchmove', move, {passive:false});
+        window.addEventListener('mouseup', () => selectedElement = null); window.addEventListener('touchend', () => selectedElement = null);
+    }
 
-  setTimeout(()=>showSlide(next), duration);
-}
+    function renderFields() {
+        const container = document.getElementById('editor-fields');
+        container.innerHTML = "";
+        document.querySelectorAll('.duzenlenebilir').forEach((el, i) => {
+            const box = document.createElement('div');
+            box.className = 'field-box';
+            box.innerHTML = `
+                <div style="font-size:10px; color:#94a3b8; font-weight:bold; margin-bottom:8px;">${(el.id || 'ALAN').toUpperCase()}</div>
+                <input type="text" class="text-input" value="${el.textContent.trim()}" oninput="document.querySelectorAll('.duzenlenebilir')[${i}].textContent = this.value">
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <input type="color" style="width:40px; height:40px; border:none; border-radius:6px; cursor:pointer;" 
+                        value="${rgbToHex(window.getComputedStyle(el).fill)}" 
+                        oninput="const e=document.querySelectorAll('.duzenlenebilir')[${i}]; e.setAttribute('fill', this.value); e.style.setProperty('fill', this.value, 'important');">
+                    <input type="range" min="8" max="250" value="${parseInt(window.getComputedStyle(el).fontSize)}" 
+                        oninput="document.querySelectorAll('.duzenlenebilir')[${i}].style.fontSize = this.value+'px'" style="flex:1; accent-color:var(--accent);">
+                </div>`;
+            container.appendChild(box);
+        });
+    }
 
-// --- Başlat ---
-showSlide(0);
+    function rgbToHex(rgb) {
+        if (rgb.startsWith('#')) return rgb;
+        const p = rgb.match(/\d+/g);
+        return "#" + p.map(x => parseInt(x).toString(16).padStart(2, '0')).join('').substring(0, 6);
+    }
 
-// --- Gerçek zamanlı SVG güncelleme (flicker-free) ---
-setInterval(() => {
-  slides.forEach((slide, i) => {
-    fetch(svgFiles[i].file, { cache: "no-store" })
-      .then(resp => {
-        if(resp.ok){
-          // Aktif olmayan slide arka planda güncellenir
-          if(!slide.classList.contains("active")){
-            slide.data = svgFiles[i].file + "?t=" + Date.now();
-          }
-        }
-      });
-  });
-}, 1000); // her 1 saniyede kontrol
+    async function saveData() {
+        const btn = document.getElementById('save-btn');
+        const st = document.getElementById('status-info');
+        const fileName = document.getElementById('file-selector').value;
+        btn.disabled = true; st.innerText = "KAYDEDİLİYOR..."; st.style.display = "block";
+
+        try {
+            const svgText = new XMLSerializer().serializeToString(document.querySelector('#canvas-inner svg'));
+            const encoded = btoa(unescape(encodeURIComponent(svgText)));
+            const res = await fetch(WORKER_URL, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json", "X-Auth-Key": SESSION_PASS, "X-File-Name": fileName },
+                body: JSON.stringify({ message: "Update", content: encoded, sha: SHA_KEY })
+            });
+            if (res.ok) {
+                const data = await res.json();
+                SHA_KEY = data.content.sha;
+                st.innerText = "BAŞARIYLA KAYDEDİLDİ!";
+                setTimeout(() => st.style.display = "none", 2000);
+            } else alert("Kayıt Hatası!");
+        } catch (e) { alert("Hata!"); }
+        btn.disabled = false;
+    }
 </script>
 </body>
 </html>
