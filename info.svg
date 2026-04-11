@@ -4201,6 +4201,7 @@ setInterval(updateCountdown,1000);
        y="368.25018"
        style="stroke-width:2.61938">ATMALAR LİGİ FİNAL</tspan></text><text
      xml:space="preserve"
+     class="duzenlenebilir"                                                                   
      style="font-weight:bold;font-size:64.6229px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Bold';writing-mode:lr-tb;direction:ltr;fill:#ffffff;stroke-width:1.39964;stroke-linecap:round;paint-order:markers fill stroke"
      x="839.97974"
      y="602.29816"
