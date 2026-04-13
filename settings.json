@@ -1,7 +1,7 @@
 [
   {
     "file": "slayt.svg",
-    "effect": "zoom",
+    "effect": "cube",
     "duration": 5000
   },
   {
