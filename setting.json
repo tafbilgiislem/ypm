@@ -1,0 +1,17 @@
+[
+  {
+    "file": "slayt.svg",
+    "effect": "zoom",
+    "duration": 5000
+  },
+  {
+    "file": "kampanya.svg",
+    "effect": "zoom",
+    "duration": 3000
+  },
+  {
+    "file": "duyuru.svg",
+    "effect": "zoom",
+    "duration": 4000
+  }
+]
