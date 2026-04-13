@@ -1,76 +1,117 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<title>Animasyon Senkron Slider</title>
-<style>
-html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:#000;display:flex;justify-content:center;align-items:center;}
-#slider{position:relative;width:100vw;height:100vh;}
-.slide{position:absolute;width:100%;height:100%;opacity:0;transition:all 1s ease-in-out;}
-.slide.active{opacity:1;}
-.zoom{transform:scale(0.5);opacity:0;}.zoom.active{transform:scale(1);opacity:1;transition:all 1s ease-in-out;}
-.cube{transform:rotateY(180deg) scale(.5);opacity:0;}.cube.active{transform:rotateY(0) scale(1);opacity:1;transition:1.5s;}
-</style>
+    <meta charset="UTF-8">
+    <title>Dinamik Animasyon Slider</title>
+    <style>
+        html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; display: flex; justify-content: center; align-items: center; }
+        #slider { position: relative; width: 100vw; height: 100vh; }
+        
+        /* Temel Slayt Yapısı */
+        .slide { position: absolute; width: 100%; height: 100%; opacity: 0; transition: all 1s ease-in-out; pointer-events: none; }
+        .slide.active { opacity: 1; }
+
+        /* Efekt Tanımları */
+        /* Zoom Efekti */
+        .zoom { transform: scale(0.5); opacity: 0; }
+        .zoom.active { transform: scale(1); opacity: 1; }
+
+        /* Cube/Rotate Efekti */
+        .cube { transform: rotateY(180deg) scale(.5); opacity: 0; }
+        .cube.active { transform: rotateY(0) scale(1); opacity: 1; transition: 1.5s; }
+    </style>
 </head>
 <body>
+
 <div id="slider"></div>
 
 <script>
-// --- Slider tanımı ---
-const svgFiles = [
-  {file:"slayt.svg", effect:"zoom", duration:10000},
-  {file:"kampanya.svg", effect:"zoom", duration:2000},
-  {file:"duyuru.svg", effect:"zoom", duration:2000}
-];
+    const slider = document.getElementById("slider");
+    let slides = [];
+    let currentIndex = 0;
+    let timer;
 
-const slider = document.getElementById("slider");
-let slides = [];
-let currentIndex = 0;
+    // 1. Ayarları JSON'dan Yükle ve Başlat
+    async function initSlider() {
+        try {
+            const resp = await fetch('settings.json?t=' + Date.now());
+            const config = await resp.json();
 
-// --- SVG object ekleme ---
-svgFiles.forEach((s, i) => {
-  const obj = document.createElement("object");
-  obj.data = s.file;
-  obj.type = "image/svg+xml";
-  obj.classList.add("slide", s.effect);
-  obj.style.width = "100%";
-  obj.style.height = "100%";
-  obj.dataset.duration = s.duration;
-  slider.appendChild(obj);
-  slides.push(obj);
-});
+            slider.innerHTML = ""; // Temizle
+            slides = [];
 
-// --- Slide gösterimi ---
-function showSlide(index){
-  slides.forEach((slide) => slide.classList.remove("active"));
-  const currentSlide = slides[index];
-  currentSlide.classList.add("active");
+            config.forEach((s) => {
+                const obj = document.createElement("object");
+                obj.data = s.file;
+                obj.type = "image/svg+xml";
+                obj.className = `slide ${s.effect}`;
+                obj.dataset.duration = s.duration;
+                obj.dataset.effect = s.effect;
+                obj.dataset.filename = s.file;
+                slider.appendChild(obj);
+                slides.push(obj);
+            });
 
-  const duration = parseInt(currentSlide.dataset.duration,10);
-  currentIndex = index;
-  let next = currentIndex + 1;
-  if(next >= slides.length) next = 0;
-
-  setTimeout(()=>showSlide(next), duration);
-}
-
-// --- Başlat ---
-showSlide(0);
-
-// --- Gerçek zamanlı SVG güncelleme (flicker-free) ---
-setInterval(() => {
-  slides.forEach((slide, i) => {
-    fetch(svgFiles[i].file, { cache: "no-store" })
-      .then(resp => {
-        if(resp.ok){
-          // Aktif olmayan slide arka planda güncellenir
-          if(!slide.classList.contains("active")){
-            slide.data = svgFiles[i].file + "?t=" + Date.now();
-          }
+            showSlide(0);
+        } catch (err) {
+            console.error("Başlatma hatası:", err);
+            // Hata varsa 5 saniye sonra tekrar dene
+            setTimeout(initSlider, 5000);
         }
-      });
-  });
-}, 1000); // her 1 saniyede kontrol
+    }
+
+    // 2. Slayt Gösterme ve Güncelleme Kontrolü
+    async function showSlide(index) {
+        if (slides.length === 0) return;
+
+        // Aktif slaytı değiştir
+        slides.forEach(s => s.classList.remove("active"));
+        const currentSlide = slides[index];
+        currentSlide.classList.add("active");
+
+        const duration = parseInt(currentSlide.dataset.duration);
+        
+        // Slaytın süresi bittiğinde...
+        clearTimeout(timer);
+        timer = setTimeout(async () => {
+            await updateCheck(); // Ayarları kontrol et
+            let next = (index + 1) >= slides.length ? 0 : index + 1;
+            showSlide(next);
+        }, duration);
+    }
+
+    // 3. Değişiklik Var mı Kontrol Et (Arka Planda Çalışır)
+    async function updateCheck() {
+        try {
+            const resp = await fetch('settings.json?t=' + Date.now());
+            const newConfig = await resp.json();
+
+            newConfig.forEach((item, i) => {
+                if (slides[i]) {
+                    // Süreyi güncelle
+                    slides[i].dataset.duration = item.duration;
+                    
+                    // Efekt değişmişse sınıfı güncelle
+                    if (slides[i].dataset.effect !== item.effect) {
+                        slides[i].classList.remove(slides[i].dataset.effect);
+                        slides[i].classList.add(item.effect);
+                        slides[i].dataset.effect = item.effect;
+                    }
+
+                    // SVG içeriğini yenile (Aktif olmayanları arka planda günceller)
+                    if (!slides[i].classList.contains("active")) {
+                        slides[i].data = item.file + "?v=" + Date.now();
+                    }
+                }
+            });
+        } catch (e) {
+            console.log("Güncelleme kontrolü başarısız.");
+        }
+    }
+
+    // Başlat
+    initSlider();
 </script>
+
 </body>
 </html>
