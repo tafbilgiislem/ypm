@@ -11,7 +11,7 @@
   },
   {
     "file": "duyuru.svg",
-    "effect": "cube",
+    "effect": "zoom",
     "duration": 4000
   }
 ]
