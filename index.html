@@ -7,7 +7,7 @@
         html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; display: flex; justify-content: center; align-items: center; font-family: sans-serif; }
         #slider { position: relative; width: 100vw; height: 100vh; }
         
-        /* Temel Slayt Yapısı */
+        /* Animasyon Efektleri */
         .slide { position: absolute; width: 100%; height: 100%; opacity: 0; transition: all 1s ease-in-out; pointer-events: none; border: none; }
         .slide.active { opacity: 1; }
         .fade{opacity:0;}.fade.active{opacity:1;}
@@ -22,43 +22,10 @@
         .rotate3d {transform: rotate3d(1,1,0,90deg);opacity:0;}.rotate3d.active{transform: rotate3d(0,0,0,0deg);opacity:1;transition: all 1.9s ease;}
         .cube{transform:rotateY(180deg) scale(.5);opacity:0;}.cube.active{transform:rotateY(0) scale(1);opacity:1;transition:3s;}
 
-        /* Tam Ekran Buton Stili */
-        #fullscreen-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 9999;
-            padding: 12px 20px;
-            background: rgba(255, 255, 255, 0.15);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 8px;
-            cursor: pointer;
-            backdrop-filter: blur(8px);
-            opacity: 0; /* Normalde gizli */
-            transition: opacity 0.3s ease;
-            text-transform: uppercase;
-            font-size: 12px;
-            font-weight: bold;
-            letter-spacing: 1px;
-        }
-
-        /* Mouse ekranda hareket ederken butonu göster */
-        body:hover #fullscreen-btn {
-            opacity: 1;
-        }
-
-        /* TAM EKRAN MODUNDA BUTONU TAMAMEN GİZLE */
-        :fullscreen #fullscreen-btn {
-            display: none !important;
-        }
-        /* Farklı tarayıcılar için destek */
-        :-webkit-full-screen #fullscreen-btn {
-            display: none !important;
-        }
-        :-ms-fullscreen #fullscreen-btn {
-            display: none !important;
-        }
+        /* Buton Stili */
+        #fullscreen-btn { position: fixed; top: 20px; right: 20px; z-index: 9999; padding: 12px 20px; background: rgba(255, 255, 255, 0.15); color: white; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 8px; cursor: pointer; backdrop-filter: blur(8px); opacity: 0; transition: opacity 0.3s ease; text-transform: uppercase; font-size: 12px; font-weight: bold; letter-spacing: 1px; }
+        body:hover #fullscreen-btn { opacity: 1; }
+        :fullscreen #fullscreen-btn, :-webkit-full-screen #fullscreen-btn, :-ms-fullscreen #fullscreen-btn { display: none !important; }
     </style>
 </head>
 <body>
@@ -72,16 +39,12 @@
     let slides = [];
     let timer;
 
-    // Tam Ekran Yapma Fonksiyonu
     fsBtn.addEventListener("click", () => {
         if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen().catch(err => {
-                console.error(`Hata: ${err.message}`);
-            });
+            document.documentElement.requestFullscreen().catch(err => console.error(err));
         }
     });
 
-    // 1. Ayarları JSON'dan Yükle ve Başlat
     async function initSlider() {
         try {
             const resp = await fetch('settings.json?t=' + Date.now());
@@ -98,6 +61,35 @@
                 obj.dataset.duration = s.duration;
                 obj.dataset.effect = s.effect;
                 obj.dataset.filename = s.file;
+
+                // SVG yüklendiğinde çalışacak kod
+                obj.addEventListener('load', function() {
+                    try {
+                        const svgDoc = obj.contentDocument;
+                        if (svgDoc) {
+                            // Dosya ismine bakmaksızın, "degisen-resim" id'sini arar
+                            const imgElement = svgDoc.getElementById("degisen-resim");
+
+                            if (imgElement) {
+                                const subImages = ["resim1.jpg", "resim2.jpg", "resim3.jpg"]; 
+                                let currentIndex = 0;
+
+                                if(obj.imageTimer) clearInterval(obj.imageTimer);
+
+                                obj.imageTimer = setInterval(() => {
+                                    currentIndex = (currentIndex + 1) % subImages.length;
+                                    let yeniResim = subImages[currentIndex];
+                                    
+                                    imgElement.setAttribute("href", yeniResim);
+                                    imgElement.setAttributeNS("http://www.w3.org/1999/xlink", "href", yeniResim);
+                                }, 2000); 
+                            }
+                        }
+                    } catch(e) {
+                        console.warn("SVG CORS Uyarısı:", e);
+                    }
+                });
+
                 slider.appendChild(obj);
                 slides.push(obj);
             });
@@ -109,7 +101,6 @@
         }
     }
 
-    // 2. Slayt Gösterme
     async function showSlide(index) {
         if (slides.length === 0) return;
 
@@ -127,7 +118,6 @@
         }, duration);
     }
 
-    // 3. Değişiklik Kontrolü
     async function updateCheck() {
         try {
             const resp = await fetch('settings.json?t=' + Date.now());
@@ -136,13 +126,11 @@
             newConfig.forEach((item, i) => {
                 if (slides[i]) {
                     slides[i].dataset.duration = item.duration;
-                    
                     if (slides[i].dataset.effect !== item.effect) {
                         slides[i].classList.remove(slides[i].dataset.effect);
                         slides[i].classList.add(item.effect);
                         slides[i].dataset.effect = item.effect;
                     }
-
                     if (!slides[i].classList.contains("active")) {
                         slides[i].data = item.file + "?v=" + Date.now();
                     }
