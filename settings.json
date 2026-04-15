@@ -6,7 +6,7 @@
   },
   {
     "file": "kampanya.svg",
-    "effect": "cube",
+    "effect": "fade",
     "duration": 5000
   },
   {
