@@ -4,34 +4,82 @@
     <meta charset="UTF-8">
     <title>Dinamik Animasyon Slider</title>
     <style>
-        html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; display: flex; justify-content: center; align-items: center; }
+        html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; display: flex; justify-content: center; align-items: center; font-family: sans-serif; }
         #slider { position: relative; width: 100vw; height: 100vh; }
         
         /* Temel Slayt Yapısı */
-        .slide { position: absolute; width: 100%; height: 100%; opacity: 0; transition: all 1s ease-in-out; pointer-events: none; }
+        .slide { position: absolute; width: 100%; height: 100%; opacity: 0; transition: all 1s ease-in-out; pointer-events: none; border: none; }
         .slide.active { opacity: 1; }
-.fade{opacity:0;}.fade.active{opacity:1;}
-.slide-left{transform:translateX(100%);opacity:0;}.slide-left.active{transform:translateX(0);opacity:1;transition:all 1s ease-in-out;}
-.zoom{transform:scale(0.5);opacity:0;}.zoom.active{transform:scale(1);opacity:1;transition:all 3s ease-in-out;}
-.slide-up { transform:translateY(100%); opacity:0; } .slide-up.active { transform:translateY(0); opacity:1; transition:all 1s ease-in-out; }
-.rotate-zoom { transform:rotate(-180deg) scale(0.5); opacity:0; } .rotate-zoom.active { transform:rotate(0deg) scale(1); opacity:1; transition:all 1.5s ease-in-out; }
-.circle{clip-path: circle(0% at 50% 50%);opacity:0;}.circle.active{clip-path: circle(100% at 50% 50%);opacity:1;transition: all 4s ease;}
-.wave{transform: translateY(100%) rotate(10deg);opacity:0;}.wave.active{transform: translateY(0) rotate(0);opacity:1;transition: all 2s ease;}
-.curtain{clip-path: inset(0 50% 0 50%);opacity:0;}.curtain.active{clip-path: inset(0 0 0 0);opacity:1;transition: all 5s ease;}
-.spin-zoom{transform: scale(0.2) rotate(-360deg);opacity:0;}.spin-zoom.active{transform: scale(1) rotate(0);opacity:1;transition: all 1.9s ease;}
-.rotate3d {transform: rotate3d(1,1,0,90deg);opacity:0;}.rotate3d.active{transform: rotate3d(0,0,0,0deg);opacity:1;transition: all 1.9s ease;}
-.cube{transform:rotateY(180deg) scale(.5);opacity:0;}.cube.active{transform:rotateY(0) scale(1);opacity:1;transition:3s;}
+        .fade{opacity:0;}.fade.active{opacity:1;}
+        .slide-left{transform:translateX(100%);opacity:0;}.slide-left.active{transform:translateX(0);opacity:1;transition:all 1s ease-in-out;}
+        .zoom{transform:scale(0.5);opacity:0;}.zoom.active{transform:scale(1);opacity:1;transition:all 3s ease-in-out;}
+        .slide-up { transform:translateY(100%); opacity:0; } .slide-up.active { transform:translateY(0); opacity:1; transition:all 1s ease-in-out; }
+        .rotate-zoom { transform:rotate(-180deg) scale(0.5); opacity:0; } .rotate-zoom.active { transform:rotate(0deg) scale(1); opacity:1; transition:all 1.5s ease-in-out; }
+        .circle{clip-path: circle(0% at 50% 50%);opacity:0;}.circle.active{clip-path: circle(100% at 50% 50%);opacity:1;transition: all 4s ease;}
+        .wave{transform: translateY(100%) rotate(10deg);opacity:0;}.wave.active{transform: translateY(0) rotate(0);opacity:1;transition: all 2s ease;}
+        .curtain{clip-path: inset(0 50% 0 50%);opacity:0;}.curtain.active{clip-path: inset(0 0 0 0);opacity:1;transition: all 5s ease;}
+        .spin-zoom{transform: scale(0.2) rotate(-360deg);opacity:0;}.spin-zoom.active{transform: scale(1) rotate(0);opacity:1;transition: all 1.9s ease;}
+        .rotate3d {transform: rotate3d(1,1,0,90deg);opacity:0;}.rotate3d.active{transform: rotate3d(0,0,0,0deg);opacity:1;transition: all 1.9s ease;}
+        .cube{transform:rotateY(180deg) scale(.5);opacity:0;}.cube.active{transform:rotateY(0) scale(1);opacity:1;transition:3s;}
+
+        /* Gizli Full Ekran Buton Stili */
+        #fullscreen-btn {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 9999;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            opacity: 0; /* Başlangıçta gizli */
+            transition: opacity 0.4s ease, background 0.3s ease;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 1px;
+        }
+
+        /* Mouse üstüne gelince veya butonun olduğu bölgeye yaklaşınca göster */
+        body:hover #fullscreen-btn, 
+        #fullscreen-btn:hover {
+            opacity: 1;
+            background: rgba(255, 255, 255, 0.3);
+        }
     </style>
 </head>
 <body>
 
+<button id="fullscreen-btn">Tam Ekran Yap</button>
 <div id="slider"></div>
 
 <script>
     const slider = document.getElementById("slider");
+    const fsBtn = document.getElementById("fullscreen-btn");
     let slides = [];
-    let currentIndex = 0;
     let timer;
+
+    // Tam Ekran Fonksiyonu
+    fsBtn.addEventListener("click", () => {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(err => {
+                console.error(`Hata: ${err.message}`);
+            });
+            fsBtn.innerText = "Tam Ekrandan Çık";
+        } else {
+            document.exitFullscreen();
+            fsBtn.innerText = "Tam Ekran Yap";
+        }
+    });
+
+    // Klavye ESC ile çıkılırsa buton metnini düzeltmek için dinleyici
+    document.addEventListener('fullscreenchange', () => {
+        if (!document.fullscreenElement) {
+            fsBtn.innerText = "Tam Ekran Yap";
+        }
+    });
 
     // 1. Ayarları JSON'dan Yükle ve Başlat
     async function initSlider() {
@@ -39,7 +87,7 @@
             const resp = await fetch('settings.json?t=' + Date.now());
             const config = await resp.json();
 
-            slider.innerHTML = ""; // Temizle
+            slider.innerHTML = ""; 
             slides = [];
 
             config.forEach((s) => {
@@ -57,32 +105,29 @@
             showSlide(0);
         } catch (err) {
             console.error("Başlatma hatası:", err);
-            // Hata varsa 5 saniye sonra tekrar dene
             setTimeout(initSlider, 5000);
         }
     }
 
-    // 2. Slayt Gösterme ve Güncelleme Kontrolü
+    // 2. Slayt Gösterme
     async function showSlide(index) {
         if (slides.length === 0) return;
 
-        // Aktif slaytı değiştir
         slides.forEach(s => s.classList.remove("active"));
         const currentSlide = slides[index];
         currentSlide.classList.add("active");
 
         const duration = parseInt(currentSlide.dataset.duration);
         
-        // Slaytın süresi bittiğinde...
         clearTimeout(timer);
         timer = setTimeout(async () => {
-            await updateCheck(); // Ayarları kontrol et
+            await updateCheck();
             let next = (index + 1) >= slides.length ? 0 : index + 1;
             showSlide(next);
         }, duration);
     }
 
-    // 3. Değişiklik Var mı Kontrol Et (Arka Planda Çalışır)
+    // 3. Güncelleme Kontrolü
     async function updateCheck() {
         try {
             const resp = await fetch('settings.json?t=' + Date.now());
@@ -90,17 +135,14 @@
 
             newConfig.forEach((item, i) => {
                 if (slides[i]) {
-                    // Süreyi güncelle
                     slides[i].dataset.duration = item.duration;
                     
-                    // Efekt değişmişse sınıfı güncelle
                     if (slides[i].dataset.effect !== item.effect) {
                         slides[i].classList.remove(slides[i].dataset.effect);
                         slides[i].classList.add(item.effect);
                         slides[i].dataset.effect = item.effect;
                     }
 
-                    // SVG içeriğini yenile (Aktif olmayanları arka planda günceller)
                     if (!slides[i].classList.contains("active")) {
                         slides[i].data = item.file + "?v=" + Date.now();
                     }
@@ -111,7 +153,6 @@
         }
     }
 
-    // Başlat
     initSlider();
 </script>
 
