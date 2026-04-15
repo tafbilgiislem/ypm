@@ -22,31 +22,42 @@
         .rotate3d {transform: rotate3d(1,1,0,90deg);opacity:0;}.rotate3d.active{transform: rotate3d(0,0,0,0deg);opacity:1;transition: all 1.9s ease;}
         .cube{transform:rotateY(180deg) scale(.5);opacity:0;}.cube.active{transform:rotateY(0) scale(1);opacity:1;transition:3s;}
 
-        /* Gizli Full Ekran Buton Stili */
+        /* Tam Ekran Buton Stili */
         #fullscreen-btn {
             position: fixed;
-            top: 10px;
-            right: 10px;
+            top: 20px;
+            right: 20px;
             z-index: 9999;
-            padding: 10px 20px;
-            background: rgba(255, 255, 255, 0.1);
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.15);
             color: white;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
             cursor: pointer;
-            backdrop-filter: blur(5px);
-            opacity: 0; /* Başlangıçta gizli */
-            transition: opacity 0.4s ease, background 0.3s ease;
+            backdrop-filter: blur(8px);
+            opacity: 0; /* Normalde gizli */
+            transition: opacity 0.3s ease;
             text-transform: uppercase;
-            font-size: 11px;
+            font-size: 12px;
+            font-weight: bold;
             letter-spacing: 1px;
         }
 
-        /* Mouse üstüne gelince veya butonun olduğu bölgeye yaklaşınca göster */
-        body:hover #fullscreen-btn, 
-        #fullscreen-btn:hover {
+        /* Mouse ekranda hareket ederken butonu göster */
+        body:hover #fullscreen-btn {
             opacity: 1;
-            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* TAM EKRAN MODUNDA BUTONU TAMAMEN GİZLE */
+        :fullscreen #fullscreen-btn {
+            display: none !important;
+        }
+        /* Farklı tarayıcılar için destek */
+        :-webkit-full-screen #fullscreen-btn {
+            display: none !important;
+        }
+        :-ms-fullscreen #fullscreen-btn {
+            display: none !important;
         }
     </style>
 </head>
@@ -61,23 +72,12 @@
     let slides = [];
     let timer;
 
-    // Tam Ekran Fonksiyonu
+    // Tam Ekran Yapma Fonksiyonu
     fsBtn.addEventListener("click", () => {
         if (!document.fullscreenElement) {
             document.documentElement.requestFullscreen().catch(err => {
                 console.error(`Hata: ${err.message}`);
             });
-            fsBtn.innerText = "Tam Ekrandan Çık";
-        } else {
-            document.exitFullscreen();
-            fsBtn.innerText = "Tam Ekran Yap";
-        }
-    });
-
-    // Klavye ESC ile çıkılırsa buton metnini düzeltmek için dinleyici
-    document.addEventListener('fullscreenchange', () => {
-        if (!document.fullscreenElement) {
-            fsBtn.innerText = "Tam Ekran Yap";
         }
     });
 
@@ -127,7 +127,7 @@
         }, duration);
     }
 
-    // 3. Güncelleme Kontrolü
+    // 3. Değişiklik Kontrolü
     async function updateCheck() {
         try {
             const resp = await fetch('settings.json?t=' + Date.now());
