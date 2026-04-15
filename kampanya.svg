@@ -21,11 +21,11 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:zoom="0.44"
-     inkscape:cx="963.63636"
+     inkscape:cx="965.90909"
      inkscape:cy="603.40909"
      inkscape:window-width="1920"
      inkscape:window-height="1009"
-     inkscape:window-x="-8"
+     inkscape:window-x="1912"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg1" />
@@ -2916,6 +2916,16 @@
      height="1080"
      fill="#000000"
      style="display:inline;stroke-width:0.948683" />
+  <image
+     id="degisen-resim"
+     x="0.76219177"
+     y="5.7547595e-06"
+     width="1920"
+     height="1080"
+     href="resim1.jpg"
+     preserveAspectRatio="xMidYMid slice"
+     style="opacity:0.5"
+     class="duzenlenebilir" />
   <g
      id="g2-1"
      transform="matrix(7.1991793,0,0,4.0255816,-568.70593,-125.97636)"
@@ -5253,14 +5263,4 @@
      style="fill: rgb(255, 255, 255); font-size: 80px;"
      data-bold="true"
      font-weight="bold">İYİ GÜNLER DİLERİZ</text>
-  <image
-     id="degisen-resim"
-     x="0.76219177"
-     y="5.7547595e-06"
-     width="1920"
-     height="1080"
-     href="resim1.jpg"
-     preserveAspectRatio="xMidYMid slice"
-     style="opacity:0.5"
-     class="duzenlenebilir" />
 </svg>
