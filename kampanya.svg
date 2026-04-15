@@ -21,11 +21,11 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:zoom="0.44"
-     inkscape:cx="962.5"
+     inkscape:cx="963.63636"
      inkscape:cy="603.40909"
      inkscape:window-width="1920"
      inkscape:window-height="1009"
-     inkscape:window-x="1912"
+     inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg1" />
@@ -5261,5 +5261,6 @@
      height="1080"
      href="resim1.jpg"
      preserveAspectRatio="xMidYMid slice"
-     style="opacity:0.5" />
+     style="opacity:0.5"
+     class="duzenlenebilir" />
 </svg>
