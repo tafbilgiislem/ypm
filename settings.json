@@ -6,7 +6,7 @@
   },
   {
     "file": "kampanya.svg",
-    "effect": "flip",
+    "effect": "cube",
     "duration": 15000
   },
   {
