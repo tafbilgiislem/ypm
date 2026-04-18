@@ -4,8 +4,13 @@
     "effect": "zoom",
     "duration": 5000
   },
-  {
+    {
     "file": "kampanya.svg",
+    "effect": "cube",
+    "duration": 5000
+  },
+  {
+    "file": "slayt.svg",
     "effect": "cube",
     "duration": 5000
   },
